@@ -1,0 +1,118 @@
+name: offer-guard-ai
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      OFFERGUARD_LOG_JSON: "true"
+      OFFERGUARD_DATABASE_URL: postgresql+asyncpg://offerguard:${POSTGRES_PASSWORD:-offerguard}@postgres:5432/offerguard
+      OFFERGUARD_VECTOR_STORE: weaviate
+      OFFERGUARD_VECTOR_HOST: weaviate
+      OFFERGUARD_VECTOR_HTTP_PORT: "8080"
+      OFFERGUARD_VECTOR_GRPC_PORT: "50051"
+      OFFERGUARD_STARTUP_CHECK_TIMEOUT_SECONDS: "30"
+      OFFERGUARD_S3_ENDPOINT_URL: http://minio:9000
+      OFFERGUARD_S3_ACCESS_KEY: ${MINIO_ROOT_USER:-offerguard}
+      OFFERGUARD_S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-offerguard-local-secret}
+      OFFERGUARD_S3_BUCKET: offer-documents
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      weaviate:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    init: true
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: offerguard
+      POSTGRES_USER: offerguard
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-offerguard}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U offerguard -d offerguard"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  weaviate:
+    image: cr.weaviate.io/semitechnologies/weaviate:1.38.1
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+      - --scheme
+      - http
+    ports:
+      - "8081:8080"
+      - "50051:50051"
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    environment:
+      QUERY_DEFAULTS_LIMIT: "25"
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      PERSISTENCE_DATA_PATH: /var/lib/weaviate
+      CLUSTER_HOSTNAME: node1
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --quiet --tries=1 --spider http://127.0.0.1:8080/v1/.well-known/ready || exit 1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    restart: on-failure:0
+
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-offerguard}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-offerguard-local-secret}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+
+  minio-init:
+    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set local http://minio:9000
+      $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD}; do sleep 2; done;
+      mc mb --ignore-existing local/offer-documents;
+      "
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-offerguard}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-offerguard-local-secret}
+    restart: "no"
+
+volumes:
+  postgres_data:
+  weaviate_data:
+  minio_data:
