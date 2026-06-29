@@ -13,6 +13,7 @@ src/app/
   core/                # cross-cutting runtime setup
     config.py          # environment-backed settings
     resources.py       # application-scoped resource lifecycle
+  db/                  # SQLAlchemy ORM models and database mappings
   services/            # reusable integration clients and service helpers
   domain/              # business/domain models and rules
   workflows/           # review workflow orchestration
@@ -62,3 +63,22 @@ services/weaviate.py   # Weaviate client creation/check/close
 
 Route handlers and workflow code should reuse the app-scoped resources instead of creating new
 Postgres engines or Weaviate clients per request.
+
+## Database Migrations
+
+PostgreSQL schema changes are managed with Alembic. Migration configuration lives in
+`alembic.ini`, the Alembic runtime environment lives in `migrations/env.py`, and individual schema
+revisions live under `migrations/versions/`.
+
+Run migrations manually from the backend directory with:
+
+```bash
+alembic upgrade head
+```
+
+In Docker Compose, migrations run as a separate one-shot `migrate` service. The service waits for
+PostgreSQL to pass its healthcheck, applies `alembic upgrade head`, and the backend starts only
+after that migration step completes successfully.
+
+ORM mappings belong under `src/app/db/`. Keep `domain/` for persistence-independent business rules
+and concepts.

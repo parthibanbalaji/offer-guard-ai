@@ -10,7 +10,8 @@ educational portfolio project, not legal advice.
 |---|---:|---|
 | Frontend | 3000 | Upload and review UI |
 | Backend | 8000 | FastAPI, LangGraph workflow, guardrails, and APIs |
-| PostgreSQL | internal | Document metadata, workflow state, reviews, and feedback |
+| PostgreSQL | 5432 | Document metadata, workflow state, reviews, and feedback |
+| Migrations | internal | One-shot Alembic schema migration before backend startup |
 | Weaviate | 8081 / 50051 | Hybrid offer-document and knowledge-base retrieval indexes |
 | MinIO | 9000 / 9001 | S3-compatible document objects and local administration UI |
 
@@ -36,10 +37,23 @@ Then open:
 Copy `.env.example` to `.env` before changing the local credentials. Never reuse the example
 credentials outside local development.
 
+Docker Compose waits for PostgreSQL to become healthy, runs Alembic migrations, and only then starts
+the backend. To inspect the local database from a desktop client such as DBeaver, connect to:
+
+```text
+Host: localhost
+Port: 5432
+Database: offerguard
+Username: offerguard
+Password: offerguard
+```
+
 ## Repository structure
 
 ```text
 backend/
+  alembic.ini        # Alembic CLI configuration
+  migrations/        # Versioned PostgreSQL schema migrations
   src/app/           # FastAPI application package
   tests/             # Unit and integration tests
   evals/             # Evaluation datasets and experiments

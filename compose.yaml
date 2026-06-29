@@ -29,8 +29,8 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      postgres:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       weaviate:
         condition: service_healthy
       minio-init:
@@ -38,8 +38,22 @@ services:
     init: true
     restart: unless-stopped
 
+  migrate:
+    build:
+      context: ./backend
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      OFFERGUARD_DATABASE_URL: postgresql+asyncpg://offerguard:${POSTGRES_PASSWORD:-offerguard}@postgres:5432/offerguard
+      OFFERGUARD_VECTOR_STORE: weaviate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
   postgres:
     image: postgres:17-alpine
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: offerguard
       POSTGRES_USER: offerguard
