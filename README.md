@@ -48,6 +48,9 @@ Username: offerguard
 Password: offerguard
 ```
 
+The frontend API base URL is configured at build time with `VITE_API_BASE_URL`. The local Docker
+default is `/api`, which lets the frontend nginx proxy requests to the backend service.
+
 ## Repository structure
 
 ```text
@@ -65,8 +68,9 @@ compose.yaml          # Complete local service topology
 docs/                 # Architecture and engineering decisions
 ```
 
-The upload endpoint used by the UI (`POST /api/v1/documents`) is the next vertical slice. The UI
-is present now so that API work is designed against a real user flow rather than an abstract route.
+The upload endpoint used by the UI (`POST /api/v1/documents`) stores original documents in MinIO,
+records durable metadata in PostgreSQL, and creates a queued review job for later processing. The
+UI can also list previously uploaded documents and download the original stored files.
 
 Read `PROJECT_CONTEXT.md` before implementation work. This project should be built flow by flow and
 file by file; the Evidence Retrieval Agent is the agentic core, while fixed ingestion and report

@@ -13,6 +13,7 @@ def test_settings_have_safe_local_defaults() -> None:
     assert settings.environment == "local"
     assert settings.docs_enabled is True
     assert settings.max_upload_bytes == 10 * 1024 * 1024
+    assert settings.allowed_upload_extension_set == frozenset({".txt", ".md", ".markdown", ".pdf"})
     assert (
         settings.database_url.get_secret_value()
         == "postgresql+asyncpg://offerguard:offerguard@postgres:5432/offerguard"
@@ -34,6 +35,8 @@ def test_settings_load_postgres_and_weaviate_from_environment(monkeypatch) -> No
     monkeypatch.setenv("OFFERGUARD_VECTOR_HTTP_PORT", "18080")
     monkeypatch.setenv("OFFERGUARD_VECTOR_GRPC_PORT", "15051")
     monkeypatch.setenv("OFFERGUARD_STARTUP_CHECK_TIMEOUT_SECONDS", "1.5")
+    monkeypatch.setenv("OFFERGUARD_MAX_UPLOAD_BYTES", "1024")
+    monkeypatch.setenv("OFFERGUARD_ALLOWED_UPLOAD_EXTENSIONS", "txt, .pdf")
 
     settings = Settings(_env_file=None)
 
@@ -46,6 +49,8 @@ def test_settings_load_postgres_and_weaviate_from_environment(monkeypatch) -> No
     assert settings.vector_http_port == 18080
     assert settings.vector_grpc_port == 15051
     assert settings.startup_check_timeout_seconds == 1.5
+    assert settings.max_upload_bytes == 1024
+    assert settings.allowed_upload_extension_set == frozenset({".txt", ".pdf"})
 
 
 def test_database_url_is_required() -> None:

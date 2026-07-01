@@ -32,6 +32,9 @@ Current health endpoints:
 ```text
 GET /api/v1/health
 GET /api/v1/ready
+POST /api/v1/documents
+GET /api/v1/documents
+GET /api/v1/documents/{document_id}/download
 ```
 
 Add new v1 routes under `src/app/api/v1/routes/` and include them from
@@ -63,6 +66,23 @@ services/weaviate.py   # Weaviate client creation/check/close
 
 Route handlers and workflow code should reuse the app-scoped resources instead of creating new
 Postgres engines or Weaviate clients per request.
+
+## Upload Intake
+
+`POST /api/v1/documents` accepts a multipart file upload and validates it while reading the file in
+chunks. The upload flow copies the original bytes to MinIO, records document metadata in
+PostgreSQL, and creates a queued review job for later processing.
+
+`GET /api/v1/documents` lists stored document metadata from PostgreSQL. `GET
+/api/v1/documents/{document_id}/download` streams the original document bytes from MinIO after
+looking up the document metadata and storage key in PostgreSQL.
+
+Upload validation is configured with environment variables:
+
+```text
+OFFERGUARD_MAX_UPLOAD_BYTES=10485760
+OFFERGUARD_ALLOWED_UPLOAD_EXTENSIONS=.txt,.md,.markdown,.pdf
+```
 
 ## Database Migrations
 

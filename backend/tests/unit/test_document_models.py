@@ -48,7 +48,7 @@ def test_review_job_model_is_linked_to_document_and_queued_first() -> None:
     }
     assert not columns["document_id"].nullable
     assert not columns["status"].nullable
-    assert list(columns["document_id"].foreign_keys)[0].target_fullname == "documents.id"
+    assert next(iter(columns["document_id"].foreign_keys)).target_fullname == "documents.id"
 
     assert DocumentUploadStatus.STORED.value == "stored"
     assert ReviewJobStatus.QUEUED.value == "queued"
