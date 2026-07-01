@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     log_json: bool = False
     docs_enabled: bool = True
     max_upload_bytes: int = Field(default=10 * 1024 * 1024, gt=0)
+    allowed_upload_extensions: str = ".txt,.md,.markdown,.pdf"
 
     database_url: SecretStr
     vector_store: Literal["weaviate", "pgvector"] = "weaviate"
@@ -34,6 +35,20 @@ class Settings(BaseSettings):
     s3_access_key: SecretStr = SecretStr("offerguard")
     s3_secret_key: SecretStr = SecretStr("offerguard-local-secret")
     s3_bucket: str = "offer-documents"
+
+    @property
+    def allowed_upload_extension_set(self) -> frozenset[str]:
+        """Return normalized supported upload filename extensions."""
+        extensions: list[str] = []
+        for value in self.allowed_upload_extensions.split(","):
+            extension = value.strip().lower()
+            if not extension:
+                continue
+            if not extension.startswith("."):
+                extension = f".{extension}"
+            extensions.append(extension)
+
+        return frozenset(extensions)
 
 
 @lru_cache

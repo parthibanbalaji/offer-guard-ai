@@ -10,7 +10,8 @@ educational portfolio project, not legal advice.
 |---|---:|---|
 | Frontend | 3000 | Upload and review UI |
 | Backend | 8000 | FastAPI, LangGraph workflow, guardrails, and APIs |
-| PostgreSQL | internal | Document metadata, workflow state, reviews, and feedback |
+| PostgreSQL | 5432 | Document metadata, workflow state, reviews, and feedback |
+| Migrations | internal | One-shot Alembic schema migration before backend startup |
 | Weaviate | 8081 / 50051 | Hybrid offer-document and knowledge-base retrieval indexes |
 | MinIO | 9000 / 9001 | S3-compatible document objects and local administration UI |
 
@@ -36,10 +37,26 @@ Then open:
 Copy `.env.example` to `.env` before changing the local credentials. Never reuse the example
 credentials outside local development.
 
+Docker Compose waits for PostgreSQL to become healthy, runs Alembic migrations, and only then starts
+the backend. To inspect the local database from a desktop client such as DBeaver, connect to:
+
+```text
+Host: localhost
+Port: 5432
+Database: offerguard
+Username: offerguard
+Password: offerguard
+```
+
+The frontend API base URL is configured at build time with `VITE_API_BASE_URL`. The local Docker
+default is `/api`, which lets the frontend nginx proxy requests to the backend service.
+
 ## Repository structure
 
 ```text
 backend/
+  alembic.ini        # Alembic CLI configuration
+  migrations/        # Versioned PostgreSQL schema migrations
   src/app/           # FastAPI application package
   tests/             # Unit and integration tests
   evals/             # Evaluation datasets and experiments
@@ -51,8 +68,9 @@ compose.yaml          # Complete local service topology
 docs/                 # Architecture and engineering decisions
 ```
 
-The upload endpoint used by the UI (`POST /api/v1/documents`) is the next vertical slice. The UI
-is present now so that API work is designed against a real user flow rather than an abstract route.
+The upload endpoint used by the UI (`POST /api/v1/documents`) stores original documents in MinIO,
+records durable metadata in PostgreSQL, and creates a queued review job for later processing. The
+UI can also list previously uploaded documents and download the original stored files.
 
 Read `PROJECT_CONTEXT.md` before implementation work. This project should be built flow by flow and
 file by file; the Evidence Retrieval Agent is the agentic core, while fixed ingestion and report

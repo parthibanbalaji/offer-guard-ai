@@ -14,6 +14,8 @@ RUN useradd --create-home --uid 10001 appuser
 WORKDIR /app
 COPY --from=builder /wheels /wheels
 RUN python -m pip install --no-cache-dir /wheels/* && rm -rf /wheels
+COPY alembic.ini ./alembic.ini
+COPY migrations ./migrations
 
 USER appuser
 EXPOSE 8000

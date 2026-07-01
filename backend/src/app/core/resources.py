@@ -13,6 +13,7 @@ from app.services.postgres import (
     close_postgres_engine,
     create_postgres_engine,
 )
+from app.services.storage import create_storage_client
 from app.services.weaviate import (
     check_weaviate,
     close_weaviate_client,
@@ -33,6 +34,7 @@ class AppResources:
     """Reusable dependency clients owned by the FastAPI lifespan."""
 
     postgres_engine: AsyncEngine
+    storage_client: Any
     weaviate_client: Any | None
 
 
@@ -44,6 +46,7 @@ def create_app_resources(settings: Settings) -> AppResources:
     """Create reusable dependency clients for the application lifespan."""
     return AppResources(
         postgres_engine=create_postgres_engine(settings),
+        storage_client=create_storage_client(settings),
         weaviate_client=create_weaviate_client(settings),
     )
 
