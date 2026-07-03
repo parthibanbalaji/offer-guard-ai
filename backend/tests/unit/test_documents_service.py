@@ -2,7 +2,13 @@ from datetime import UTC, datetime
 from types import SimpleNamespace
 from uuid import UUID
 
-from app.services.documents import document_record_query, to_document_record
+import pytest
+
+from app.services.documents import (
+    document_record_query,
+    to_document_record,
+    update_review_job_status,
+)
 
 
 def test_document_record_query_orders_newest_first() -> None:
@@ -34,3 +40,39 @@ def test_to_document_record_maps_document_and_job_rows() -> None:
     assert record.job_id == review_job.id
     assert record.original_filename == "offer.txt"
     assert record.review_job_status == "queued"
+
+
+@pytest.mark.asyncio
+async def test_update_review_job_status_persists_transition(monkeypatch) -> None:
+    executed: list[object] = []
+
+    class FakeSession:
+        async def __aenter__(self) -> "FakeSession":
+            return self
+
+        async def __aexit__(self, *_: object) -> None:
+            return None
+
+        async def execute(self, statement: object) -> None:
+            executed.append(statement)
+
+        async def commit(self) -> None:
+            executed.append("commit")
+
+    class FakeSessionFactory:
+        def __call__(self) -> FakeSession:
+            return FakeSession()
+
+    def async_sessionmaker(_: object, **__: object) -> FakeSessionFactory:
+        return FakeSessionFactory()
+
+    monkeypatch.setattr("app.services.documents.async_sessionmaker", async_sessionmaker)
+
+    await update_review_job_status(
+        SimpleNamespace(),
+        UUID("22222222-2222-2222-2222-222222222222"),
+        "processing",
+    )
+
+    assert "UPDATE review_jobs SET status=:status" in str(executed[0])
+    assert executed[1] == "commit"

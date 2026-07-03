@@ -16,6 +16,7 @@ COPY --from=builder /wheels /wheels
 RUN python -m pip install --no-cache-dir /wheels/* && rm -rf /wheels
 COPY alembic.ini ./alembic.ini
 COPY migrations ./migrations
+COPY knowledge_base ./knowledge_base
 
 USER appuser
 EXPOSE 8000

@@ -2,6 +2,8 @@ import { FormEvent, useEffect, useState } from "react";
 
 type UploadState = "idle" | "uploading" | "complete" | "error";
 type LoadState = "idle" | "loading" | "ready" | "error";
+type PreparationState = Record<string, "idle" | "preparing" | "complete" | "error">;
+type ChunkLoadState = Record<string, "idle" | "loading" | "ready" | "error">;
 
 type DocumentUploadResponse = {
   document_id: string;
@@ -27,6 +29,31 @@ type StoredDocument = {
   created_at: string;
 };
 
+type DocumentPreparationResponse = {
+  document_id: string;
+  job_id: string;
+  review_job_status: string;
+  chunk_count: number;
+  stored_count: number;
+  indexed_count: number;
+  guardrail_flags: string[];
+};
+
+type DocumentChunk = {
+  id: string;
+  document_id: string;
+  chunk_ordinal: number;
+  text: string;
+  checksum_sha256: string;
+  language: string;
+  extraction_quality: string;
+  page_number: number | null;
+  section_heading: string | null;
+  is_suspicious: boolean;
+  guardrail_flags: string[];
+  created_at: string;
+};
+
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "/api";
 
 function buildApiUrl(path: string) {
@@ -44,6 +71,10 @@ export function App() {
   const [message, setMessage] = useState("Select a text, Markdown, or text-based PDF offer.");
   const [document, setDocument] = useState<DocumentUploadResponse | null>(null);
   const [documents, setDocuments] = useState<StoredDocument[]>([]);
+  const [preparationState, setPreparationState] = useState<PreparationState>({});
+  const [preparationMessage, setPreparationMessage] = useState<Record<string, string>>({});
+  const [chunkLoadState, setChunkLoadState] = useState<ChunkLoadState>({});
+  const [documentChunks, setDocumentChunks] = useState<Record<string, DocumentChunk[]>>({});
 
   async function loadDocuments() {
     setLoadState("loading");
@@ -83,6 +114,49 @@ export function App() {
     } catch (error) {
       setState("error");
       setMessage(error instanceof Error ? error.message : "Upload failed");
+    }
+  }
+
+  async function prepareReview(documentId: string) {
+    setPreparationState((current) => ({ ...current, [documentId]: "preparing" }));
+    setPreparationMessage((current) => ({ ...current, [documentId]: "Preparing review..." }));
+
+    try {
+      const response = await fetch(buildApiUrl(`/v1/documents/${documentId}/prepare`), {
+        method: "POST",
+      });
+      if (!response.ok) throw new Error(`Could not prepare review (${response.status})`);
+      const result = (await response.json()) as DocumentPreparationResponse;
+      setPreparationState((current) => ({ ...current, [documentId]: "complete" }));
+      setPreparationMessage((current) => ({
+        ...current,
+        [documentId]: `Stored ${result.stored_count} chunks; indexed ${result.indexed_count}.`,
+      }));
+      await loadDocuments();
+    } catch (error) {
+      setPreparationState((current) => ({ ...current, [documentId]: "error" }));
+      setPreparationMessage((current) => ({
+        ...current,
+        [documentId]: error instanceof Error ? error.message : "Could not prepare review",
+      }));
+    }
+  }
+
+  async function loadChunks(documentId: string) {
+    if (chunkLoadState[documentId] === "ready") {
+      setChunkLoadState((current) => ({ ...current, [documentId]: "idle" }));
+      return;
+    }
+
+    setChunkLoadState((current) => ({ ...current, [documentId]: "loading" }));
+    try {
+      const response = await fetch(buildApiUrl(`/v1/documents/${documentId}/chunks`));
+      if (!response.ok) throw new Error(`Could not load chunks (${response.status})`);
+      const result = (await response.json()) as DocumentChunk[];
+      setDocumentChunks((current) => ({ ...current, [documentId]: result }));
+      setChunkLoadState((current) => ({ ...current, [documentId]: "ready" }));
+    } catch {
+      setChunkLoadState((current) => ({ ...current, [documentId]: "error" }));
     }
   }
 
@@ -174,10 +248,63 @@ export function App() {
                   <div>
                     <span>Upload: {item.upload_status}</span>
                     <span>Job: {item.review_job_status}</span>
+                    {preparationMessage[item.document_id] ? (
+                      <span className={`preparation-note ${preparationState[item.document_id]}`}>
+                        {preparationMessage[item.document_id]}
+                      </span>
+                    ) : null}
                   </div>
-                  <a href={buildApiUrl(`/v1/documents/${item.document_id}/download`)}>
-                    Download
-                  </a>
+                  <div className="document-actions">
+                    <button
+                      className="secondary"
+                      disabled={preparationState[item.document_id] === "preparing"}
+                      type="button"
+                      onClick={() => void prepareReview(item.document_id)}
+                    >
+                      {preparationState[item.document_id] === "preparing"
+                        ? "Preparing..."
+                        : "Prepare review"}
+                    </button>
+                    <button
+                      className="secondary"
+                      disabled={chunkLoadState[item.document_id] === "loading"}
+                      type="button"
+                      onClick={() => void loadChunks(item.document_id)}
+                    >
+                      {chunkLoadState[item.document_id] === "ready" ? "Hide chunks" : "View chunks"}
+                    </button>
+                    <a href={buildApiUrl(`/v1/documents/${item.document_id}/download`)}>
+                      Download
+                    </a>
+                  </div>
+                  {chunkLoadState[item.document_id] === "error" ? (
+                    <p className="status error wide">Could not load chunks.</p>
+                  ) : null}
+                  {chunkLoadState[item.document_id] === "ready" ? (
+                    <div className="chunk-list">
+                      {(documentChunks[item.document_id] ?? []).length === 0 ? (
+                        <p className="muted">No chunks stored yet.</p>
+                      ) : null}
+                      {(documentChunks[item.document_id] ?? []).map((chunk) => (
+                        <section className="chunk-row" key={chunk.id}>
+                          <div>
+                            <strong>Chunk {chunk.chunk_ordinal + 1}</strong>
+                            <span>
+                              {chunk.page_number ? `Page ${chunk.page_number}` : "No page"} /{" "}
+                              {chunk.section_heading ?? "No section"}
+                            </span>
+                          </div>
+                          <p>{chunk.text}</p>
+                          <code>{chunk.checksum_sha256}</code>
+                          {chunk.is_suspicious ? (
+                            <span className="preparation-note error">
+                              Suspicious: {chunk.guardrail_flags.join(", ")}
+                            </span>
+                          ) : null}
+                        </section>
+                      ))}
+                    </div>
+                  ) : null}
                 </article>
               ))}
             </div>

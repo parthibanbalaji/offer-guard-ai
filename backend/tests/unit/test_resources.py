@@ -5,6 +5,7 @@ import pytest
 from app.core import resources as resource_module
 from app.core.config import Settings
 from app.core.resources import AppResources, StartupDependencyError
+from app.domain.rules import RuleBase
 
 
 def make_settings(**overrides: Any) -> Settings:
@@ -15,11 +16,25 @@ def make_settings(**overrides: Any) -> Settings:
     return Settings(_env_file=None, **values)
 
 
+def make_rule_base() -> RuleBase:
+    return RuleBase(
+        schema_version="1.0",
+        rule_base_id="test_rules",
+        title="Test rules",
+        jurisdiction="UAE",
+        retrieved_on="2026-07-03",
+        limitations=(),
+        sources=(),
+        clauses=(),
+    )
+
+
 def test_create_app_resources_uses_service_factories(monkeypatch) -> None:
     settings = make_settings()
     engine = object()
     storage_client = object()
     client = object()
+    rule_base = make_rule_base()
 
     def create_postgres_engine(_: Settings) -> object:
         return engine
@@ -30,9 +45,13 @@ def test_create_app_resources_uses_service_factories(monkeypatch) -> None:
     def create_weaviate_client(_: Settings) -> object:
         return client
 
+    def load_rule_base(_: str) -> RuleBase:
+        return rule_base
+
     monkeypatch.setattr(resource_module, "create_postgres_engine", create_postgres_engine)
     monkeypatch.setattr(resource_module, "create_storage_client", create_storage_client)
     monkeypatch.setattr(resource_module, "create_weaviate_client", create_weaviate_client)
+    monkeypatch.setattr(resource_module, "load_rule_base", load_rule_base)
 
     resources = resource_module.create_app_resources(settings)
 
@@ -40,6 +59,7 @@ def test_create_app_resources_uses_service_factories(monkeypatch) -> None:
         postgres_engine=engine,
         storage_client=storage_client,
         weaviate_client=client,
+        uae_rule_base=rule_base,
     )
 
 
@@ -51,6 +71,7 @@ async def test_check_startup_dependencies_runs_postgres_and_weaviate(monkeypatch
         postgres_engine=object(),
         storage_client=object(),
         weaviate_client=object(),
+        uae_rule_base=make_rule_base(),
     )
 
     async def check_postgres(_: object) -> None:
@@ -74,6 +95,7 @@ async def test_check_startup_dependencies_names_failing_dependency(monkeypatch) 
         postgres_engine=object(),
         storage_client=object(),
         weaviate_client=object(),
+        uae_rule_base=make_rule_base(),
     )
 
     async def check_postgres(_: object) -> None:

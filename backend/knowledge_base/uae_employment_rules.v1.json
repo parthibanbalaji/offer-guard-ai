@@ -1,0 +1,461 @@
+{
+  "schema_version": "1.0",
+  "rule_base_id": "uae_private_sector_employment_rules_v1",
+  "title": "UAE private-sector employment offer review rules",
+  "jurisdiction": "United Arab Emirates - mainland private-sector employment, excluding DIFC, ADGM, domestic workers, and public-sector employment unless separately stated",
+  "retrieved_on": "2026-07-03",
+  "last_reviewed_on": null,
+  "effective_from": "2022-02-02",
+  "limitations": [
+    "This rule base is for AI-assisted offer review support and is not legal advice.",
+    "Rules are framed for UAE mainland private-sector employment under Federal Decree-Law No. 33 of 2021 and its executive regulations.",
+    "Free zones, DIFC, ADGM, domestic workers, government employment, seafarers, and special sector rules may differ.",
+    "If the offer appears to conflict with a mandatory rule or the extracted evidence is weak, route the clause to human review."
+  ],
+  "sources": [
+    {
+      "source_id": "uae_legislation_labour_sector",
+      "title": "UAE Legislation platform - Labour, Residency and Professions sector",
+      "publisher": "UAE Ministry of Cabinet Affairs",
+      "url": "https://uaelegislation.gov.ae/en/legislations?sector=44",
+      "retrieved_on": "2026-07-03",
+      "notes": "Official UAE legislation portal category for laws and implementing regulations related to labour and employer-employee relations."
+    },
+    {
+      "source_id": "mohre_laws",
+      "title": "Laws",
+      "publisher": "UAE Ministry of Human Resources and Emiratisation",
+      "url": "https://www.mohre.gov.ae/en/laws-and-regulations/laws.aspx",
+      "retrieved_on": "2026-07-03",
+      "notes": "MOHRE laws and regulations portal."
+    },
+    {
+      "source_id": "uae_private_sector_laws",
+      "title": "Employment laws and regulations in the private sector",
+      "publisher": "The Official Portal of the UAE Government",
+      "url": "https://u.ae/en/information-and-services/jobs/employment-in-the-private-sector/employment-laws-and-regulations-in-the-private-sector",
+      "retrieved_on": "2026-07-03",
+      "notes": "Official government overview of private-sector employment laws."
+    },
+    {
+      "source_id": "federal_decree_law_33_2021",
+      "title": "Federal Decree-Law No. 33 of 2021 on the Regulation of Labour Relations",
+      "publisher": "United Arab Emirates",
+      "url": "https://uaelegislation.gov.ae/",
+      "retrieved_on": "2026-07-03",
+      "notes": "Primary labour law. Article references in this file should be checked against the official Arabic text and current amendments during legal review."
+    },
+    {
+      "source_id": "cabinet_resolution_1_2022",
+      "title": "Cabinet Resolution No. 1 of 2022 on the Executive Regulations of Federal Decree-Law No. 33 of 2021",
+      "publisher": "United Arab Emirates",
+      "url": "https://uaelegislation.gov.ae/",
+      "retrieved_on": "2026-07-03",
+      "notes": "Executive regulations for private-sector labour law. Article references should be checked against the official Arabic text and current amendments during legal review."
+    }
+  ],
+  "clauses": [
+    {
+      "clause_id": "probation_period",
+      "title": "Probation period",
+      "priority": "high",
+      "description": "Review whether the offer includes a probation period and whether duration, notice, and mobility terms respect UAE limits.",
+      "search_terms": ["probation", "probationary", "trial period", "confirmation", "notice during probation"],
+      "retrieval_queries": [
+        "Find the offer clause that states whether there is a probation period and how long the probation period lasts.",
+        "Find any probation clause that explains termination, resignation, or written notice during probation.",
+        "Find wording about confirmation of employment, extension of probation, or what happens when probation ends.",
+        "Find probation terms that mention relocation, mobility, penalties, repayment, or restrictions if the employee resigns during probation."
+      ],
+      "rules": [
+        {
+          "rule_id": "probation_max_six_months",
+          "type": "legal_requirement",
+          "severity": "high",
+          "text": "A probation period should not exceed six months.",
+          "recommendation": "Flag any probation term longer than six months or any wording that permits extension beyond six months.",
+          "expected_offer_evidence": ["probation duration", "probation start and end wording"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 9"}]
+        },
+        {
+          "rule_id": "probation_termination_notice",
+          "type": "legal_requirement",
+          "severity": "medium",
+          "text": "During probation, employer termination requires written notice; UAE labour law distinguishes minimum notice periods for employer termination and employee resignation/mobility during probation.",
+          "recommendation": "Flag missing or one-sided probation notice terms. Human review is required if the offer imposes penalties or unclear relocation/mobility obligations.",
+          "expected_offer_evidence": ["probation notice period", "probation resignation terms", "probation termination terms"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 9"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "notice_period",
+      "title": "Notice period",
+      "priority": "high",
+      "description": "Review ordinary termination notice terms outside probation.",
+      "search_terms": ["notice", "notice period", "resignation", "termination notice", "payment in lieu"],
+      "retrieval_queries": [
+        "Find the offer clause that states the notice period for employee resignation or employer termination.",
+        "Find terms about written notice, payment in lieu of notice, garden leave, or notice compensation.",
+        "Find any clause that gives different notice periods for probation, confirmed employment, seniority, or termination for cause.",
+        "Find wording that allows immediate termination, termination without notice, or waiver of notice."
+      ],
+      "rules": [
+        {
+          "rule_id": "notice_between_30_and_90_days",
+          "type": "legal_requirement",
+          "severity": "high",
+          "text": "Ordinary employment termination notice should be in writing and generally between 30 and 90 days.",
+          "recommendation": "Flag notice periods below 30 days, above 90 days, or asymmetric notice where the employee is bound more heavily than the employer.",
+          "expected_offer_evidence": ["notice period duration", "written notice requirement", "who may terminate"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 43"}]
+        },
+        {
+          "rule_id": "notice_compensation",
+          "type": "review_recommendation",
+          "severity": "medium",
+          "text": "If either party fails to observe notice, compensation in lieu of notice may be relevant.",
+          "recommendation": "Prefer clear wording for pay in lieu of notice and avoid clauses that waive statutory notice compensation without legal review.",
+          "expected_offer_evidence": ["payment in lieu wording", "notice compensation wording"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 43"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "salary_and_compensation",
+      "title": "Salary and compensation",
+      "priority": "high",
+      "description": "Review salary clarity, basic wage, allowances, bonuses, deductions, and payment terms.",
+      "search_terms": ["salary", "basic salary", "allowance", "wage", "bonus", "commission", "deduction", "WPS"],
+      "retrieval_queries": [
+        "Find the offer clause that states salary, basic salary, allowances, total compensation, currency, and payment frequency.",
+        "Find bonus, commission, incentive, equity, variable pay, or discretionary compensation terms.",
+        "Find any salary deduction, set-off, clawback, repayment, training cost, visa cost, or relocation cost wording.",
+        "Find benefits or allowances such as housing, transport, phone, education, medical insurance, or other compensation components."
+      ],
+      "rules": [
+        {
+          "rule_id": "salary_components_clear",
+          "type": "review_recommendation",
+          "severity": "high",
+          "text": "The offer should clearly separate basic wage from allowances and variable compensation because statutory benefits such as gratuity may depend on basic wage.",
+          "recommendation": "Flag offers that state only total compensation without basic salary/allowance split.",
+          "expected_offer_evidence": ["basic salary amount", "allowances", "currency", "payment frequency"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Definitions and Article 22"}]
+        },
+        {
+          "rule_id": "deductions_need_basis",
+          "type": "legal_requirement",
+          "severity": "medium",
+          "text": "Salary deductions should have a lawful basis and should not be open-ended.",
+          "recommendation": "Flag broad deduction rights, training clawbacks, visa-cost deductions, or unspecified set-off language for human review.",
+          "expected_offer_evidence": ["deduction clause", "training repayment", "set-off wording"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 25"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "working_hours",
+      "title": "Working hours",
+      "priority": "high",
+      "description": "Review daily/weekly hours, overtime, rest days, Ramadan hours, and work pattern.",
+      "search_terms": ["working hours", "hours of work", "overtime", "rest day", "Ramadan", "shift", "remote work"],
+      "retrieval_queries": [
+        "Find the offer clause that states daily working hours, weekly working hours, work schedule, or shift pattern.",
+        "Find terms about overtime, overtime pay, salary covering overtime, rest-day work, weekend work, or public holiday work.",
+        "Find clauses about Ramadan working hours, reduced hours, breaks, rest periods, or meal breaks.",
+        "Find wording about flexible work, remote work, on-call duties, travel time, or employer discretion to change working hours."
+      ],
+      "rules": [
+        {
+          "rule_id": "normal_hours_limit",
+          "type": "legal_requirement",
+          "severity": "high",
+          "text": "Normal working hours are generally limited to eight hours per day or 48 hours per week, subject to statutory exceptions.",
+          "recommendation": "Flag offers with routine hours exceeding 8/day or 48/week without exception or overtime treatment.",
+          "expected_offer_evidence": ["daily hours", "weekly hours", "work schedule", "work pattern"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 17"}]
+        },
+        {
+          "rule_id": "overtime_and_ramadans_hours",
+          "type": "review_recommendation",
+          "severity": "medium",
+          "text": "Overtime, rest-day work, and Ramadan hour reductions should be handled consistently with UAE labour rules.",
+          "recommendation": "Flag offers that say salary covers all overtime or omit overtime treatment for non-exempt roles.",
+          "expected_offer_evidence": ["overtime wording", "rest day work", "Ramadan hours"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Articles 17-19"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "annual_leave",
+      "title": "Annual leave",
+      "priority": "high",
+      "description": "Review paid annual leave entitlement and accrual.",
+      "search_terms": ["annual leave", "vacation", "holiday", "paid leave", "leave entitlement"],
+      "retrieval_queries": [
+        "Find the offer clause that states annual leave, vacation, holiday entitlement, or paid leave days.",
+        "Find terms about annual leave accrual, eligibility during the first year, probation leave, or leave approval.",
+        "Find wording about unused annual leave, carry forward, forfeiture, encashment, or payment on termination.",
+        "Find any clause that combines annual leave with public holidays, sick leave, unpaid leave, or company shutdown periods."
+      ],
+      "rules": [
+        {
+          "rule_id": "annual_leave_minimum",
+          "type": "legal_requirement",
+          "severity": "high",
+          "text": "A full-time employee is generally entitled to 30 calendar days of paid annual leave after one year of service, and two days per month after more than six months but less than one year.",
+          "recommendation": "Flag annual leave below statutory minimum or unclear paid/unpaid status.",
+          "expected_offer_evidence": ["annual leave days", "paid leave wording", "accrual wording"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 29"}]
+        },
+        {
+          "rule_id": "leave_carry_forward_and_payment",
+          "type": "review_recommendation",
+          "severity": "medium",
+          "text": "Unused leave handling, carry-forward, and payment on termination should be clear and not waive statutory entitlements.",
+          "recommendation": "Flag forfeiture of accrued leave or vague carry-forward language for human review.",
+          "expected_offer_evidence": ["unused leave", "carry forward", "leave encashment"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 29"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "sick_leave",
+      "title": "Sick leave",
+      "priority": "medium",
+      "description": "Review sick leave entitlement after probation and medical certificate requirements.",
+      "search_terms": ["sick leave", "medical leave", "illness", "medical certificate", "health"],
+      "retrieval_queries": [
+        "Find the offer clause that states sick leave, medical leave, illness leave, or sickness absence entitlement.",
+        "Find terms about sick leave pay, full pay, half pay, unpaid sick leave, or the number of sick leave days.",
+        "Find wording about medical certificates, notice of illness, employer medical examination, or sickness reporting requirements.",
+        "Find any clause that limits sick leave during probation or allows termination because of sickness or absence."
+      ],
+      "rules": [
+        {
+          "rule_id": "sick_leave_schedule",
+          "type": "legal_requirement",
+          "severity": "medium",
+          "text": "After probation, sick leave may reach up to 90 days per year, commonly structured as 15 days full pay, 30 days half pay, and 45 days unpaid.",
+          "recommendation": "Flag offers that provide less sick leave than the statutory schedule or omit sick leave entirely.",
+          "expected_offer_evidence": ["sick leave days", "sick pay schedule", "probation sick leave wording"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 31"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "termination",
+      "title": "Termination",
+      "priority": "high",
+      "description": "Review termination rights, summary dismissal, final settlement, and employer discretion.",
+      "search_terms": ["termination", "dismissal", "summary dismissal", "gross misconduct", "final settlement", "end of employment"],
+      "retrieval_queries": [
+        "Find the offer clause that explains how employment may be terminated by the employer or employee.",
+        "Find immediate termination, summary dismissal, gross misconduct, termination for cause, or without notice wording.",
+        "Find termination for convenience, redundancy, performance, incapacity, company policy breach, or employer discretion wording.",
+        "Find final settlement terms, return of property, release, waiver, end-of-employment obligations, or post-termination payments."
+      ],
+      "rules": [
+        {
+          "rule_id": "ordinary_termination_written_notice",
+          "type": "legal_requirement",
+          "severity": "high",
+          "text": "Ordinary termination should be tied to written notice and lawful grounds consistent with UAE labour law.",
+          "recommendation": "Flag termination for convenience without notice, broad immediate termination rights, or clauses that remove statutory entitlements.",
+          "expected_offer_evidence": ["termination rights", "cause", "notice", "final settlement"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Articles 42-43"}]
+        },
+        {
+          "rule_id": "summary_dismissal_is_limited",
+          "type": "legal_requirement",
+          "severity": "high",
+          "text": "Summary dismissal without notice is limited to legally specified cases.",
+          "recommendation": "Flag broad definitions of gross misconduct or immediate dismissal language for human review.",
+          "expected_offer_evidence": ["summary dismissal", "gross misconduct", "without notice"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 44"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "end_of_service_gratuity",
+      "title": "End-of-service or gratuity",
+      "priority": "high",
+      "description": "Review gratuity acknowledgement, calculation basis, and exclusions.",
+      "search_terms": ["gratuity", "end of service", "severance", "EOSB", "basic salary"],
+      "retrieval_queries": [
+        "Find the offer clause that mentions end-of-service gratuity, severance, final benefits, or EOSB.",
+        "Find terms explaining how gratuity is calculated, whether it is based on basic salary, and when it becomes payable.",
+        "Find exclusions, forfeiture, deductions, repayment, or waiver language related to gratuity or end-of-service benefits.",
+        "Find final settlement wording that mentions accrued salary, leave encashment, gratuity, or other termination payments."
+      ],
+      "rules": [
+        {
+          "rule_id": "gratuity_formula",
+          "type": "legal_requirement",
+          "severity": "high",
+          "text": "For qualifying full-time service of at least one year, end-of-service gratuity is generally calculated on basic wage at 21 days for each of the first five years and 30 days for each additional year, subject to statutory caps and exclusions.",
+          "recommendation": "Flag clauses that waive gratuity, calculate on a lower undefined amount, or exclude qualifying service without basis.",
+          "expected_offer_evidence": ["gratuity clause", "basic wage", "service duration", "exclusions"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 51"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "non_compete_restrictive_covenants",
+      "title": "Non-compete or restrictive covenants",
+      "priority": "high",
+      "description": "Review non-compete, non-solicit, and restraint language.",
+      "search_terms": ["non-compete", "non compete", "non-solicit", "restrictive covenant", "restraint", "clients", "competitor"],
+      "retrieval_queries": [
+        "Find the offer clause that restricts the employee from joining competitors, competing after employment, or working in similar business.",
+        "Find non-solicitation terms about clients, customers, suppliers, employees, candidates, or business contacts.",
+        "Find restraint terms that state duration, geographic area, restricted activities, restricted roles, or competitor definitions.",
+        "Find penalty, liquidated damages, injunction, repayment, or enforcement wording connected to non-compete or non-solicit obligations."
+      ],
+      "rules": [
+        {
+          "rule_id": "non_compete_limited_scope",
+          "type": "legal_requirement",
+          "severity": "high",
+          "text": "A non-compete should be limited by time, place, and type of work to the extent necessary to protect legitimate business interests.",
+          "recommendation": "Flag worldwide, indefinite, all-industry, or role-agnostic restrictions.",
+          "expected_offer_evidence": ["duration", "geography", "restricted activity", "legitimate interest"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Article 10"}]
+        },
+        {
+          "rule_id": "non_compete_max_two_years",
+          "type": "legal_requirement",
+          "severity": "high",
+          "text": "The executive regulations limit post-termination non-compete duration, commonly to a maximum of two years.",
+          "recommendation": "Flag non-compete durations over two years or missing duration.",
+          "expected_offer_evidence": ["non-compete duration", "post-termination period"],
+          "citations": [{"source_id": "cabinet_resolution_1_2022", "reference": "Executive regulation provisions on non-compete"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "confidentiality",
+      "title": "Confidentiality",
+      "priority": "medium",
+      "description": "Review confidentiality and IP-adjacent secrecy obligations.",
+      "search_terms": ["confidential", "confidentiality", "trade secrets", "proprietary", "disclosure"],
+      "retrieval_queries": [
+        "Find the offer clause that defines confidential information, proprietary information, trade secrets, or company information.",
+        "Find confidentiality obligations during employment and after termination, including duration and exceptions.",
+        "Find restrictions on discussing salary, employment terms, legal claims, regulators, authorities, or protected disclosures.",
+        "Find intellectual property, inventions, work product, data protection, or return-of-information wording connected to confidentiality."
+      ],
+      "rules": [
+        {
+          "rule_id": "confidentiality_reasonable_scope",
+          "type": "review_recommendation",
+          "severity": "medium",
+          "text": "Confidentiality clauses are common, but should be reasonably scoped to confidential information and should not prevent lawful disclosure, statutory rights, or cooperation with authorities.",
+          "recommendation": "Flag confidentiality clauses that cover all personal knowledge, wages, legal claims, or communications with regulators.",
+          "expected_offer_evidence": ["definition of confidential information", "duration", "exceptions"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "General employee obligations and trade secret concepts"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "governing_law_jurisdiction",
+      "title": "Governing law and jurisdiction",
+      "priority": "medium",
+      "description": "Review governing law, forum, dispute resolution, and free-zone scope.",
+      "search_terms": ["governing law", "jurisdiction", "courts", "arbitration", "MOHRE", "DIFC", "ADGM", "dispute"],
+      "retrieval_queries": [
+        "Find the offer clause that states governing law, applicable law, jurisdiction, courts, or dispute resolution forum.",
+        "Find arbitration, mediation, MOHRE complaint, UAE courts, foreign courts, exclusive jurisdiction, or waiver of court rights wording.",
+        "Find workplace, employer location, free zone, DIFC, ADGM, mainland UAE, or country-of-employment wording.",
+        "Find any clause saying foreign law applies or that disputes must be handled outside the UAE."
+      ],
+      "rules": [
+        {
+          "rule_id": "uae_law_for_mainland_private_sector",
+          "type": "legal_requirement",
+          "severity": "medium",
+          "text": "For UAE mainland private-sector employment, mandatory UAE labour protections generally apply regardless of contrary offer wording.",
+          "recommendation": "Flag foreign governing law, foreign exclusive jurisdiction, or arbitration wording for human review.",
+          "expected_offer_evidence": ["governing law", "jurisdiction", "dispute forum"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Scope and dispute provisions"}]
+        },
+        {
+          "rule_id": "free_zone_scope_check",
+          "type": "risk_signal",
+          "severity": "medium",
+          "text": "DIFC, ADGM, and some special employment contexts may have different employment law frameworks.",
+          "recommendation": "If the employer or workplace is in DIFC, ADGM, a free zone, or outside UAE mainland, route to human review.",
+          "expected_offer_evidence": ["employer location", "workplace", "free zone", "DIFC", "ADGM"],
+          "citations": [{"source_id": "uae_private_sector_laws", "reference": "Jurisdiction overview"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "visa_sponsorship_employment_eligibility",
+      "title": "Visa, sponsorship, and employment eligibility",
+      "priority": "high",
+      "description": "Review work authorization, employer sponsorship obligations, recruitment costs, and passport/control risks.",
+      "search_terms": ["visa", "work permit", "sponsorship", "residency", "passport", "recruitment fee", "employment eligibility"],
+      "retrieval_queries": [
+        "Find the offer clause that discusses visa sponsorship, residency visa, work permit, employment eligibility, or authorization to work.",
+        "Find terms about who pays for visa, work permit, medical test, Emirates ID, recruitment, relocation, or sponsorship costs.",
+        "Find repayment, deduction, clawback, bond, or penalty wording if the employee resigns after visa or relocation expenses.",
+        "Find passport retention, document custody, immigration compliance, start date conditional on visa, or cancellation of sponsorship wording."
+      ],
+      "rules": [
+        {
+          "rule_id": "work_authorization_required",
+          "type": "legal_requirement",
+          "severity": "high",
+          "text": "Employment should be conditional on lawful UAE work authorization where required.",
+          "recommendation": "Flag offers that require work before permit completion or make the employee solely responsible for employer-side authorization.",
+          "expected_offer_evidence": ["visa sponsorship", "work permit", "start date condition"],
+          "citations": [{"source_id": "uae_private_sector_laws", "reference": "Private-sector employment requirements"}]
+        },
+        {
+          "rule_id": "employer_cost_recovery_risk",
+          "type": "risk_signal",
+          "severity": "high",
+          "text": "Recruitment, sponsorship, visa, work permit, and similar employer-side costs should not be shifted to the employee without legal review.",
+          "recommendation": "Flag repayment or deduction clauses for visa, recruitment, relocation, or sponsorship costs.",
+          "expected_offer_evidence": ["visa cost", "recruitment fee", "repayment", "deduction", "relocation clawback"],
+          "citations": [{"source_id": "mohre_laws", "reference": "MOHRE labour regulations and worker protection guidance"}]
+        }
+      ]
+    },
+    {
+      "clause_id": "missing_unclear_mandatory_terms",
+      "title": "Missing or unclear mandatory terms",
+      "priority": "high",
+      "description": "Identify key offer terms that are missing, contradictory, or too vague to review safely.",
+      "search_terms": ["job title", "start date", "workplace", "contract", "term", "benefits", "allowance", "probation", "notice"],
+      "retrieval_queries": [
+        "Find the clause or summary section that states employer name, job title, reporting line, work location, start date, and contract type.",
+        "Find core employment terms including salary, benefits, probation, notice, working hours, leave, and applicable policies.",
+        "Find references to handbooks, policies, company rules, terms incorporated by reference, or documents not included in the offer.",
+        "Find vague or discretionary wording where important terms will be decided later, amended by the employer, or governed by future policies."
+      ],
+      "rules": [
+        {
+          "rule_id": "core_offer_terms_should_be_clear",
+          "type": "review_recommendation",
+          "severity": "high",
+          "text": "An offer should clearly state employer identity, job title, work location, start date, contract type or term, wage components, benefits, leave, probation, notice, and applicable policies.",
+          "recommendation": "Flag missing or contradictory core terms because reliable automated scoring may not be possible.",
+          "expected_offer_evidence": ["employer", "job title", "work location", "start date", "salary", "leave", "probation", "notice"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Employment contract provisions"}]
+        },
+        {
+          "rule_id": "policies_incorporated_by_reference",
+          "type": "risk_signal",
+          "severity": "medium",
+          "text": "If important obligations are incorporated through external policies, handbooks, or future documents, those documents may be needed for a complete review.",
+          "recommendation": "Ask the user for referenced policies when the offer depends on documents not uploaded.",
+          "expected_offer_evidence": ["handbook", "policy", "as amended", "company rules"],
+          "citations": [{"source_id": "federal_decree_law_33_2021", "reference": "Employment contract and workplace policy context"}]
+        }
+      ]
+    }
+  ]
+}

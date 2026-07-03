@@ -1,8 +1,11 @@
+from collections.abc import Sequence
 from typing import Any
+from uuid import UUID
 
 import pytest
 
 from app.core.config import Settings
+from app.rag.chunking import DocumentChunk
 from app.services import weaviate as weaviate_service
 from app.services.weaviate import WeaviateNotReadyError
 
@@ -46,3 +49,83 @@ async def test_check_weaviate_raises_when_client_is_not_ready() -> None:
 
     with pytest.raises(WeaviateNotReadyError):
         await weaviate_service.check_weaviate(Client())
+
+
+@pytest.mark.asyncio
+async def test_index_document_chunks_embeds_and_batches_objects() -> None:
+    class Embeddings:
+        async def embed_texts(self, texts: Sequence[str]) -> list[list[float]]:
+            assert texts == ["Offer chunk"]
+            return [[0.1, 0.2, 0.3]]
+
+    class Batch:
+        def __init__(self) -> None:
+            self.objects: list[dict[str, Any]] = []
+
+        def dynamic(self) -> "Batch":
+            return self
+
+        def __enter__(self) -> "Batch":
+            return self
+
+        def __exit__(self, *_: object) -> None:
+            return None
+
+        def add_object(self, **kwargs: Any) -> None:
+            self.objects.append(kwargs)
+
+    class Collection:
+        def __init__(self) -> None:
+            self.batch = Batch()
+
+    class Collections:
+        def __init__(self) -> None:
+            self.collection = Collection()
+
+        def exists(self, name: str) -> bool:
+            assert name == weaviate_service.CHUNK_COLLECTION
+            return True
+
+        def get(self, name: str) -> Collection:
+            assert name == weaviate_service.CHUNK_COLLECTION
+            return self.collection
+
+    class Client:
+        def __init__(self) -> None:
+            self.collections = Collections()
+
+    client = Client()
+    chunk = DocumentChunk(
+        document_id=UUID("11111111-1111-1111-1111-111111111111"),
+        chunk_ordinal=0,
+        text="Offer chunk",
+        checksum_sha256="a" * 64,
+        language="en",
+        extraction_quality="good",
+        page_number=1,
+        section_heading="Compensation",
+        is_suspicious=False,
+        guardrail_flags=(),
+    )
+
+    count = await weaviate_service.index_document_chunks(client, (chunk,), Embeddings())
+
+    assert count == 1
+    assert client.collections.collection.batch.objects == [
+        {
+            "uuid": weaviate_service.chunk_object_id(chunk),
+            "properties": {
+                "document_id": "11111111-1111-1111-1111-111111111111",
+                "chunk_ordinal": 0,
+                "text": "Offer chunk",
+                "checksum_sha256": "a" * 64,
+                "language": "en",
+                "extraction_quality": "good",
+                "page_number": 1,
+                "section_heading": "Compensation",
+                "is_suspicious": False,
+                "guardrail_flags": [],
+            },
+            "vector": [0.1, 0.2, 0.3],
+        }
+    ]

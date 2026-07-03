@@ -23,6 +23,11 @@ def test_settings_have_safe_local_defaults() -> None:
     assert settings.vector_http_port == 8080
     assert settings.vector_grpc_port == 50051
     assert settings.startup_check_timeout_seconds == 5.0
+    assert settings.embedding_provider == "openai"
+    assert settings.embedding_model == "openai/text-embedding-3-small"
+    assert settings.embedding_base_url == "https://openrouter.ai/api/v1"
+    assert settings.embedding_dimensions == 1536
+    assert settings.embedding_max_retries == 3
 
 
 def test_settings_load_postgres_and_weaviate_from_environment(monkeypatch) -> None:
@@ -37,6 +42,9 @@ def test_settings_load_postgres_and_weaviate_from_environment(monkeypatch) -> No
     monkeypatch.setenv("OFFERGUARD_STARTUP_CHECK_TIMEOUT_SECONDS", "1.5")
     monkeypatch.setenv("OFFERGUARD_MAX_UPLOAD_BYTES", "1024")
     monkeypatch.setenv("OFFERGUARD_ALLOWED_UPLOAD_EXTENSIONS", "txt, .pdf")
+    monkeypatch.setenv("OFFERGUARD_EMBEDDING_MODEL", "openai/text-embedding-3-large")
+    monkeypatch.setenv("OFFERGUARD_EMBEDDING_BASE_URL", "https://openrouter.ai/api/v1")
+    monkeypatch.setenv("OFFERGUARD_OPENROUTER_API_KEY", "openrouter-key")
 
     settings = Settings(_env_file=None)
 
@@ -51,6 +59,10 @@ def test_settings_load_postgres_and_weaviate_from_environment(monkeypatch) -> No
     assert settings.startup_check_timeout_seconds == 1.5
     assert settings.max_upload_bytes == 1024
     assert settings.allowed_upload_extension_set == frozenset({".txt", ".pdf"})
+    assert settings.embedding_model == "openai/text-embedding-3-large"
+    assert settings.embedding_base_url == "https://openrouter.ai/api/v1"
+    assert settings.openrouter_api_key is not None
+    assert settings.openrouter_api_key.get_secret_value() == "openrouter-key"
 
 
 def test_database_url_is_required() -> None:

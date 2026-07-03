@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import Select, select
+from sqlalchemy import Select, select, update
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
 
 from app.db.models import Document, ReviewJob
@@ -77,3 +77,19 @@ async def get_document_record(
 
     document, review_job = row
     return to_document_record(document, review_job)
+
+
+async def update_review_job_status(
+    postgres_engine: AsyncEngine,
+    job_id: UUID,
+    review_job_status: str,
+) -> None:
+    """Update the stored status for a review job."""
+    session_factory = async_sessionmaker(postgres_engine, expire_on_commit=False)
+    async with session_factory() as session:
+        await session.execute(
+            update(ReviewJob)
+            .where(ReviewJob.id == job_id)
+            .values(status=review_job_status)
+        )
+        await session.commit()
