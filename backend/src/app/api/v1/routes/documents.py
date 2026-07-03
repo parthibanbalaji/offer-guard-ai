@@ -11,9 +11,17 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from app.core.config import Settings, get_settings
-from app.services.documents import DocumentRecord, get_document_record, list_document_records
+from app.rag.embeddings import EmbeddingProviderError
+from app.rag.pipeline import DocumentIndexingError
+from app.services.document_chunks import list_document_chunks
+from app.services.documents import (
+    DocumentRecord,
+    get_document_record,
+    list_document_records,
+)
 from app.services.storage import get_file_object
 from app.services.uploads import prepare_upload_file, store_prepared_upload
+from app.workflows.document_review import prepare_document_review_run
 
 router = APIRouter()
 
@@ -51,6 +59,35 @@ class DocumentListResponse(BaseModel):
     checksum_sha256: str
     upload_status: str
     review_job_status: str
+    created_at: datetime
+
+
+class DocumentPreparationResponse(BaseModel):
+    """Result returned after preparing an uploaded document for review."""
+
+    document_id: UUID
+    job_id: UUID
+    review_job_status: str
+    chunk_count: int
+    stored_count: int
+    indexed_count: int
+    guardrail_flags: list[str]
+
+
+class DocumentChunkResponse(BaseModel):
+    """Auditable extracted chunk returned for document inspection."""
+
+    id: UUID
+    document_id: UUID
+    chunk_ordinal: int
+    text: str
+    checksum_sha256: str
+    language: str
+    extraction_quality: str
+    page_number: int | None
+    section_heading: str | None
+    is_suspicious: bool
+    guardrail_flags: list[str]
     created_at: datetime
 
 
@@ -119,6 +156,87 @@ async def list_documents(request: Request) -> list[DocumentListResponse]:
     """List documents that have already been uploaded."""
     records = await list_document_records(request.app.state.resources.postgres_engine)
     return [to_document_list_response(record) for record in records]
+
+
+@router.post("/documents/{document_id}/prepare", response_model=DocumentPreparationResponse)
+async def prepare_document_for_review(
+    document_id: UUID,
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> DocumentPreparationResponse:
+    """Manually prepare an uploaded document for review."""
+    resources = request.app.state.resources
+    try:
+        result = await prepare_document_review_run(
+            document_id=document_id,
+            settings=settings,
+            postgres_engine=resources.postgres_engine,
+            storage_client=resources.storage_client,
+            weaviate_client=resources.weaviate_client,
+            rule_base=getattr(resources, "uae_rule_base", None),
+        )
+    except DocumentIndexingError as exc:
+        http_status = status.HTTP_422_UNPROCESSABLE_ENTITY
+        if str(exc).startswith("document not found"):
+            http_status = status.HTTP_404_NOT_FOUND
+        raise HTTPException(
+            status_code=http_status,
+            detail=str(exc),
+        ) from exc
+    except EmbeddingProviderError as exc:
+        http_status = status.HTTP_503_SERVICE_UNAVAILABLE
+        if exc.kind == "rate_limited":
+            http_status = status.HTTP_429_TOO_MANY_REQUESTS
+        elif exc.kind == "quota_exceeded":
+            http_status = status.HTTP_402_PAYMENT_REQUIRED
+        raise HTTPException(
+            status_code=http_status,
+            detail=str(exc),
+        ) from exc
+
+    return DocumentPreparationResponse(
+        document_id=document_id,
+        job_id=result.document.job_id,
+        review_job_status=result.review_job_status,
+        chunk_count=result.indexing_result.chunk_count,
+        stored_count=result.indexing_result.stored_count,
+        indexed_count=result.indexing_result.indexed_count,
+        guardrail_flags=list(result.guardrail_flags),
+    )
+
+
+@router.get("/documents/{document_id}/chunks", response_model=list[DocumentChunkResponse])
+async def list_document_chunk_rows(
+    document_id: UUID,
+    request: Request,
+) -> list[DocumentChunkResponse]:
+    """List auditable extracted chunks for one uploaded document."""
+    postgres_engine = request.app.state.resources.postgres_engine
+    record = await get_document_record(postgres_engine, document_id)
+    if record is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="document not found",
+        )
+
+    chunks = await list_document_chunks(postgres_engine, document_id)
+    return [
+        DocumentChunkResponse(
+            id=chunk.id,
+            document_id=chunk.document_id,
+            chunk_ordinal=chunk.chunk_ordinal,
+            text=chunk.text,
+            checksum_sha256=chunk.checksum_sha256,
+            language=chunk.language,
+            extraction_quality=chunk.extraction_quality,
+            page_number=chunk.page_number,
+            section_heading=chunk.section_heading,
+            is_suspicious=chunk.is_suspicious,
+            guardrail_flags=list(chunk.guardrail_flags),
+            created_at=chunk.created_at,
+        )
+        for chunk in chunks
+    ]
 
 
 @router.get("/documents/{document_id}/download")

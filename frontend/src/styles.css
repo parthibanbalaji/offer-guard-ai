@@ -41,6 +41,16 @@ button.secondary { color: #176b49; background: #eef5f1; border: 1px solid #d9e6d
 .document-row span { color: #66766f; font-size: .88rem; }
 .document-row a { color: #176b49; font-weight: 800; text-decoration: none; }
 .document-row a:hover { text-decoration: underline; }
+.document-actions { display: flex; align-items: center; justify-content: flex-end; gap: .75rem; }
+.document-actions button.secondary { white-space: nowrap; }
+.preparation-note.complete { color: #176b49; }
+.preparation-note.error { color: #a02f2f; }
+.document-row .wide { grid-column: 1 / -1; }
+.chunk-list { grid-column: 1 / -1; display: grid; gap: .75rem; margin-top: .5rem; }
+.chunk-row { display: grid; gap: .55rem; padding: .8rem; border: 1px solid #e1ebe5; border-radius: .5rem; background: #fbfdfc; }
+.chunk-row div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; }
+.chunk-row p { margin: 0; color: #24342e; font-size: .88rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.chunk-row code { color: #53615c; font-size: .74rem; overflow-wrap: anywhere; }
 .disclaimer { margin: 2rem 0 0; padding-top: 1rem; border-top: 1px solid #e4ebe7; color: #738079; font-size: .82rem; }
 
 @media (max-width: 640px) {
@@ -49,4 +59,5 @@ button.secondary { color: #176b49; background: #eef5f1; border: 1px solid #d9e6d
   .document-summary { grid-template-columns: 1fr; }
   .panel-heading { align-items: flex-start; flex-direction: column; }
   .document-row { grid-template-columns: 1fr; }
+  .document-actions { justify-content: flex-start; }
 }

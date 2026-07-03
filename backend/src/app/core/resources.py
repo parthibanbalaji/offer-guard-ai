@@ -8,6 +8,7 @@ from typing import Any
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from app.core.config import Settings
+from app.domain.rules import RuleBase, load_rule_base
 from app.services.postgres import (
     check_postgres,
     close_postgres_engine,
@@ -36,18 +37,37 @@ class AppResources:
     postgres_engine: AsyncEngine
     storage_client: Any
     weaviate_client: Any | None
+    uae_rule_base: RuleBase
 
 
 class StartupDependencyError(RuntimeError):
     """Raised when a required startup dependency cannot be reached."""
 
 
+def close_weaviate_client_sync(client: Any | None) -> None:
+    """Close a partially constructed Weaviate client during sync startup."""
+    if client is not None:
+        client.close()
+
+
 def create_app_resources(settings: Settings) -> AppResources:
     """Create reusable dependency clients for the application lifespan."""
+    rule_base = load_rule_base(settings.rule_base_path)
+    postgres_engine = create_postgres_engine(settings)
+    weaviate_client = None
+
+    try:
+        storage_client = create_storage_client(settings)
+        weaviate_client = create_weaviate_client(settings)
+    except Exception:
+        close_weaviate_client_sync(weaviate_client)
+        raise
+
     return AppResources(
-        postgres_engine=create_postgres_engine(settings),
-        storage_client=create_storage_client(settings),
-        weaviate_client=create_weaviate_client(settings),
+        postgres_engine=postgres_engine,
+        storage_client=storage_client,
+        weaviate_client=weaviate_client,
+        uae_rule_base=rule_base,
     )
 
 

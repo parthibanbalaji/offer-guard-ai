@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     docs_enabled: bool = True
     max_upload_bytes: int = Field(default=10 * 1024 * 1024, gt=0)
     allowed_upload_extensions: str = ".txt,.md,.markdown,.pdf"
+    rule_base_path: str = "/app/knowledge_base/uae_employment_rules.v1.json"
 
     database_url: SecretStr
     vector_store: Literal["weaviate", "pgvector"] = "weaviate"
@@ -35,6 +36,17 @@ class Settings(BaseSettings):
     s3_access_key: SecretStr = SecretStr("offerguard")
     s3_secret_key: SecretStr = SecretStr("offerguard-local-secret")
     s3_bucket: str = "offer-documents"
+    chunk_target_chars: int = Field(default=1200, gt=0)
+    chunk_overlap_chars: int = Field(default=180, ge=0)
+    embedding_provider: Literal["hash", "openai"] = "openai"
+    embedding_model: str = "openai/text-embedding-3-small"
+    embedding_base_url: str = "https://openrouter.ai/api/v1"
+    embedding_dimensions: int = Field(default=1536, gt=0)
+    embedding_timeout_seconds: float = Field(default=30.0, gt=0)
+    embedding_max_retries: int = Field(default=3, ge=0)
+    embedding_retry_min_seconds: int = Field(default=2, ge=0)
+    embedding_retry_max_seconds: int = Field(default=20, ge=0)
+    openrouter_api_key: SecretStr | None = None
 
     @property
     def allowed_upload_extension_set(self) -> frozenset[str]:
