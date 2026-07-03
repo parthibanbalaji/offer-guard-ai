@@ -1,4 +1,5 @@
 from collections.abc import Sequence
+from types import SimpleNamespace
 from typing import Any
 from uuid import UUID
 
@@ -129,3 +130,66 @@ async def test_index_document_chunks_embeds_and_batches_objects() -> None:
             "vector": [0.1, 0.2, 0.3],
         }
     ]
+
+
+@pytest.mark.asyncio
+async def test_search_document_chunk_ordinals_embeds_query_and_filters_by_document() -> None:
+    class Embeddings:
+        async def embed_texts(self, texts: Sequence[str]) -> list[list[float]]:
+            assert texts == ["probation period notice"]
+            return [[0.4, 0.5, 0.6]]
+
+    class Query:
+        def __init__(self) -> None:
+            self.calls: list[dict[str, Any]] = []
+
+        def near_vector(self, **kwargs: Any) -> SimpleNamespace:
+            self.calls.append(kwargs)
+            return SimpleNamespace(
+                objects=[
+                    SimpleNamespace(
+                        properties={"chunk_ordinal": 2},
+                        metadata=SimpleNamespace(distance=0.12),
+                    ),
+                    SimpleNamespace(
+                        properties={"chunk_ordinal": 5},
+                        metadata=SimpleNamespace(distance=0.22),
+                    ),
+                ]
+            )
+
+    class Collection:
+        def __init__(self) -> None:
+            self.query = Query()
+
+    class Collections:
+        def __init__(self) -> None:
+            self.collection = Collection()
+
+        def exists(self, name: str) -> bool:
+            assert name == weaviate_service.CHUNK_COLLECTION
+            return True
+
+        def get(self, name: str) -> Collection:
+            assert name == weaviate_service.CHUNK_COLLECTION
+            return self.collection
+
+    class Client:
+        def __init__(self) -> None:
+            self.collections = Collections()
+
+    client = Client()
+
+    matches = await weaviate_service.search_document_chunk_ordinals(
+        client,
+        document_id=UUID("11111111-1111-1111-1111-111111111111"),
+        query_text="probation period notice",
+        embedding_model=Embeddings(),
+        limit=2,
+    )
+
+    assert [match.chunk_ordinal for match in matches] == [2, 5]
+    assert [match.distance for match in matches] == [0.12, 0.22]
+    assert client.collections.collection.query.calls[0]["near_vector"] == [0.4, 0.5, 0.6]
+    assert client.collections.collection.query.calls[0]["limit"] == 2
+    assert client.collections.collection.query.calls[0]["return_properties"] == ["chunk_ordinal"]

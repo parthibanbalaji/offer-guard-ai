@@ -11,17 +11,21 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from app.core.config import Settings, get_settings
+from app.db.models import ReportGenerationStatus
 from app.rag.embeddings import EmbeddingProviderError
 from app.rag.pipeline import DocumentIndexingError
+from app.rag.reporting import ReportGenerationError
 from app.services.document_chunks import list_document_chunks
 from app.services.documents import (
     DocumentRecord,
     get_document_record,
     list_document_records,
 )
+from app.services.reports import DocumentReportRecord, get_document_report
 from app.services.storage import get_file_object
 from app.services.uploads import prepare_upload_file, store_prepared_upload
 from app.workflows.document_review import prepare_document_review_run
+from app.workflows.report_generation import generate_document_report
 
 router = APIRouter()
 
@@ -59,6 +63,10 @@ class DocumentListResponse(BaseModel):
     checksum_sha256: str
     upload_status: str
     review_job_status: str
+    report_status: str
+    report_available: bool
+    report_error_message: str | None
+    report_generated_at: datetime | None
     created_at: datetime
 
 
@@ -91,6 +99,17 @@ class DocumentChunkResponse(BaseModel):
     created_at: datetime
 
 
+class DocumentReportResponse(BaseModel):
+    """Generated report metadata returned after generation."""
+
+    document_id: UUID
+    report_id: UUID | None
+    report_status: str
+    report_available: bool
+    report_error_message: str | None
+    report_generated_at: datetime | None
+
+
 def to_document_list_response(record: DocumentRecord) -> DocumentListResponse:
     """Convert a document read model into an API response."""
     return DocumentListResponse(
@@ -102,7 +121,23 @@ def to_document_list_response(record: DocumentRecord) -> DocumentListResponse:
         checksum_sha256=record.checksum_sha256,
         upload_status=record.upload_status,
         review_job_status=record.review_job_status,
+        report_status=record.report_status,
+        report_available=record.report_storage_key is not None,
+        report_error_message=record.report_error_message,
+        report_generated_at=record.report_generated_at,
         created_at=record.created_at,
+    )
+
+
+def to_report_response(report: DocumentReportRecord) -> DocumentReportResponse:
+    """Convert a report read model into an API response."""
+    return DocumentReportResponse(
+        document_id=report.document_id,
+        report_id=report.id,
+        report_status=report.status,
+        report_available=report.report_storage_key is not None,
+        report_error_message=report.error_message,
+        report_generated_at=report.generated_at,
     )
 
 
@@ -237,6 +272,96 @@ async def list_document_chunk_rows(
         )
         for chunk in chunks
     ]
+
+
+@router.post("/documents/{document_id}/report", response_model=DocumentReportResponse)
+async def generate_report_for_document(
+    document_id: UUID,
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> DocumentReportResponse:
+    """Generate a downloadable clause analysis report for a prepared document."""
+    resources = request.app.state.resources
+    try:
+        result = await generate_document_report(
+            document_id=document_id,
+            settings=settings,
+            postgres_engine=resources.postgres_engine,
+            storage_client=resources.storage_client,
+            weaviate_client=resources.weaviate_client,
+            rule_base=resources.uae_rule_base,
+        )
+    except ReportGenerationError as exc:
+        message = str(exc)
+        http_status = status.HTTP_422_UNPROCESSABLE_ENTITY
+        if message.startswith("document not found"):
+            http_status = status.HTTP_404_NOT_FOUND
+        elif "already" in message:
+            http_status = status.HTTP_409_CONFLICT
+        raise HTTPException(status_code=http_status, detail=message) from exc
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"report generation failed: {exc}",
+        ) from exc
+
+    return to_report_response(result.report)
+
+
+@router.get("/documents/{document_id}/report", response_model=DocumentReportResponse)
+async def get_report_for_document(
+    document_id: UUID,
+    request: Request,
+) -> DocumentReportResponse:
+    """Return report status for one document."""
+    record = await get_document_record(request.app.state.resources.postgres_engine, document_id)
+    if record is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="document not found",
+        )
+
+    report = await get_document_report(request.app.state.resources.postgres_engine, document_id)
+    if report is None:
+        return DocumentReportResponse(
+            document_id=document_id,
+            report_id=None,
+            report_status=ReportGenerationStatus.NOT_STARTED.value,
+            report_available=False,
+            report_error_message=None,
+            report_generated_at=None,
+        )
+    return to_report_response(report)
+
+
+@router.get("/documents/{document_id}/report/download")
+async def download_report(
+    document_id: UUID,
+    request: Request,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> StreamingResponse:
+    """Download the generated Markdown report."""
+    report = await get_document_report(request.app.state.resources.postgres_engine, document_id)
+    if report is None or report.report_storage_key is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="report not found",
+        )
+
+    stored_object = await get_file_object(
+        request.app.state.resources.storage_client,
+        settings.s3_bucket,
+        report.report_storage_key,
+    )
+    body = stored_object["Body"]
+    filename = quote("offer-review-report.md")
+    headers = {"Content-Disposition": f"attachment; filename*=UTF-8''{filename}"}
+
+    return StreamingResponse(
+        iter_storage_body(body),
+        media_type="text/markdown; charset=utf-8",
+        headers=headers,
+    )
 
 
 @router.get("/documents/{document_id}/download")

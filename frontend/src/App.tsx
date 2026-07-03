@@ -3,6 +3,7 @@ import { FormEvent, useEffect, useState } from "react";
 type UploadState = "idle" | "uploading" | "complete" | "error";
 type LoadState = "idle" | "loading" | "ready" | "error";
 type PreparationState = Record<string, "idle" | "preparing" | "complete" | "error">;
+type ReportState = Record<string, "idle" | "generating" | "complete" | "error">;
 type ChunkLoadState = Record<string, "idle" | "loading" | "ready" | "error">;
 
 type DocumentUploadResponse = {
@@ -26,6 +27,10 @@ type StoredDocument = {
   checksum_sha256: string;
   upload_status: string;
   review_job_status: string;
+  report_status: string;
+  report_available: boolean;
+  report_error_message: string | null;
+  report_generated_at: string | null;
   created_at: string;
 };
 
@@ -54,6 +59,15 @@ type DocumentChunk = {
   created_at: string;
 };
 
+type DocumentReportResponse = {
+  document_id: string;
+  report_id: string | null;
+  report_status: string;
+  report_available: boolean;
+  report_error_message: string | null;
+  report_generated_at: string | null;
+};
+
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "/api";
 
 function buildApiUrl(path: string) {
@@ -73,6 +87,8 @@ export function App() {
   const [documents, setDocuments] = useState<StoredDocument[]>([]);
   const [preparationState, setPreparationState] = useState<PreparationState>({});
   const [preparationMessage, setPreparationMessage] = useState<Record<string, string>>({});
+  const [reportState, setReportState] = useState<ReportState>({});
+  const [reportMessage, setReportMessage] = useState<Record<string, string>>({});
   const [chunkLoadState, setChunkLoadState] = useState<ChunkLoadState>({});
   const [documentChunks, setDocumentChunks] = useState<Record<string, DocumentChunk[]>>({});
 
@@ -157,6 +173,35 @@ export function App() {
       setChunkLoadState((current) => ({ ...current, [documentId]: "ready" }));
     } catch {
       setChunkLoadState((current) => ({ ...current, [documentId]: "error" }));
+    }
+  }
+
+  async function generateReport(documentId: string) {
+    setReportState((current) => ({ ...current, [documentId]: "generating" }));
+    setReportMessage((current) => ({ ...current, [documentId]: "Generating report..." }));
+
+    try {
+      const response = await fetch(buildApiUrl(`/v1/documents/${documentId}/report`), {
+        method: "POST",
+      });
+      if (!response.ok) throw new Error(`Could not generate report (${response.status})`);
+      const result = (await response.json()) as DocumentReportResponse;
+      setReportState((current) => ({ ...current, [documentId]: "complete" }));
+      setReportMessage((current) => ({
+        ...current,
+        [documentId]:
+          result.report_status === "completed"
+            ? "Report generated."
+            : `Report ${result.report_status}.`,
+      }));
+      await loadDocuments();
+    } catch (error) {
+      setReportState((current) => ({ ...current, [documentId]: "error" }));
+      setReportMessage((current) => ({
+        ...current,
+        [documentId]: error instanceof Error ? error.message : "Could not generate report",
+      }));
+      await loadDocuments();
     }
   }
 
@@ -248,23 +293,54 @@ export function App() {
                   <div>
                     <span>Upload: {item.upload_status}</span>
                     <span>Job: {item.review_job_status}</span>
+                    <span>Report: {item.report_status}</span>
                     {preparationMessage[item.document_id] ? (
                       <span className={`preparation-note ${preparationState[item.document_id]}`}>
                         {preparationMessage[item.document_id]}
                       </span>
                     ) : null}
+                    {reportMessage[item.document_id] ? (
+                      <span className={`preparation-note ${reportState[item.document_id]}`}>
+                        {reportMessage[item.document_id]}
+                      </span>
+                    ) : null}
+                    {item.report_error_message ? (
+                      <span className="preparation-note error">{item.report_error_message}</span>
+                    ) : null}
                   </div>
                   <div className="document-actions">
-                    <button
-                      className="secondary"
-                      disabled={preparationState[item.document_id] === "preparing"}
-                      type="button"
-                      onClick={() => void prepareReview(item.document_id)}
-                    >
-                      {preparationState[item.document_id] === "preparing"
-                        ? "Preparing..."
-                        : "Prepare review"}
-                    </button>
+                    {item.review_job_status === "completed" ? null : (
+                      <button
+                        className="secondary"
+                        disabled={preparationState[item.document_id] === "preparing"}
+                        type="button"
+                        onClick={() => void prepareReview(item.document_id)}
+                      >
+                        {preparationState[item.document_id] === "preparing"
+                          ? "Preparing..."
+                          : "Prepare review"}
+                      </button>
+                    )}
+                    {item.review_job_status === "completed" &&
+                    (item.report_status === "not_started" || item.report_status === "failed") ? (
+                      <button
+                        className="secondary"
+                        disabled={reportState[item.document_id] === "generating"}
+                        type="button"
+                        onClick={() => void generateReport(item.document_id)}
+                      >
+                        {reportState[item.document_id] === "generating"
+                          ? "Generating..."
+                          : item.report_status === "failed"
+                            ? "Retry report"
+                            : "Generate report"}
+                      </button>
+                    ) : null}
+                    {item.report_available ? (
+                      <a href={buildApiUrl(`/v1/documents/${item.document_id}/report/download`)}>
+                        Download report
+                      </a>
+                    ) : null}
                     <button
                       className="secondary"
                       disabled={chunkLoadState[item.document_id] === "loading"}
@@ -274,7 +350,7 @@ export function App() {
                       {chunkLoadState[item.document_id] === "ready" ? "Hide chunks" : "View chunks"}
                     </button>
                     <a href={buildApiUrl(`/v1/documents/${item.document_id}/download`)}>
-                      Download
+                      Download original
                     </a>
                   </div>
                   {chunkLoadState[item.document_id] === "error" ? (

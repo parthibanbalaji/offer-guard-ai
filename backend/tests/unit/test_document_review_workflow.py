@@ -32,6 +32,10 @@ def make_record() -> DocumentRecord:
         original_storage_key="documents/111/original.txt",
         upload_status="stored",
         review_job_status="queued",
+        report_status="not_started",
+        report_storage_key=None,
+        report_error_message=None,
+        report_generated_at=None,
         created_at=datetime(2026, 7, 1, 12, 0, tzinfo=UTC),
     )
 

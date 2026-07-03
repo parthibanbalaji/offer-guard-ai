@@ -47,6 +47,11 @@ class Settings(BaseSettings):
     embedding_retry_min_seconds: int = Field(default=2, ge=0)
     embedding_retry_max_seconds: int = Field(default=20, ge=0)
     openrouter_api_key: SecretStr | None = None
+    report_model: str = "openai/gpt-oss-120b:free"
+    report_base_url: str = "https://openrouter.ai/api/v1"
+    report_timeout_seconds: float = Field(default=90.0, gt=0)
+    report_max_retries: int = Field(default=2, ge=0)
+    report_relevant_chunk_count: int = Field(default=5, gt=0)
 
     @property
     def allowed_upload_extension_set(self) -> frozenset[str]:
@@ -66,4 +71,4 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     """Return one settings instance per process."""
-    return Settings()
+    return Settings()  # type: ignore[call-arg]
