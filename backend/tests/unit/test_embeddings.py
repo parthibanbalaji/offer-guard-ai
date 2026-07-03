@@ -89,9 +89,7 @@ def test_create_cached_embedding_model_uses_model_specific_namespace(monkeypatch
     )
 
     assert isinstance(model, CachedEmbeddingModel)
-    assert model.namespace == (
-        "report-retrieval|openai|test-model|https://openrouter.ai/api/v1|12"
-    )
+    assert model.namespace == ("report-retrieval|openai|test-model|https://openrouter.ai/api/v1|12")
 
 
 @pytest.mark.parametrize(

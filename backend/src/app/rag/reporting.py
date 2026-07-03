@@ -212,9 +212,7 @@ def build_clause_retrieval_queries(clause: ClauseDefinition) -> tuple[str, ...]:
         )
 
     expected_evidence = [
-        evidence
-        for rule in clause.rules
-        for evidence in rule.expected_offer_evidence
+        evidence for rule in clause.rules for evidence in rule.expected_offer_evidence
     ]
     fallback_queries = (*clause.search_terms, *expected_evidence)
     if fallback_queries:
@@ -239,11 +237,7 @@ def build_clause_retrieval_query(clause: ClauseDefinition) -> str:
         clause.description,
         *clause.search_terms,
         *clause.retrieval_queries,
-        *(
-            evidence
-            for rule in clause.rules
-            for evidence in rule.expected_offer_evidence
-        ),
+        *(evidence for rule in clause.rules for evidence in rule.expected_offer_evidence),
         *(rule.text for rule in clause.rules),
     )
 
@@ -405,7 +399,7 @@ def evidence_lines(values: list[dict[str, Any]]) -> list[str]:
         location = f"chunk {value.get('chunk_ordinal')}"
         if page:
             location = f"{location}, page {page}"
-        lines.append(f"- {location}: \"{string_value(value.get('quote'))}\"")
+        lines.append(f'- {location}: "{string_value(value.get("quote"))}"')
     return lines
 
 
