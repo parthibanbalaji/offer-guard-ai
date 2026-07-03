@@ -101,8 +101,6 @@ def flags_for_text(text: str) -> tuple[str, ...]:
     """Return guardrail flags that apply directly to a chunk of text."""
     lowered = text.lower()
     flags = [
-        "prompt_injection_signal"
-        for pattern in PROMPT_INJECTION_PATTERNS
-        if pattern in lowered
+        "prompt_injection_signal" for pattern in PROMPT_INJECTION_PATTERNS if pattern in lowered
     ]
     return tuple(dict.fromkeys(flags))

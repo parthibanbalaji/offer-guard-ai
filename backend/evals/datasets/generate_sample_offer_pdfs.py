@@ -77,7 +77,9 @@ class PdfCanvas:
     def _footer(self) -> None:
         self.set_color(0.65, 0.65, 0.65)
         self.line(42, 42, PAGE_WIDTH - 42, 42, 0.4)
-        self.text(42, 28, "Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter", 7)
+        self.text(
+            42, 28, "Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter", 7
+        )
         self.text(PAGE_WIDTH - 92, 28, f"Page {self.page_number}", 7)
 
     def set_color(self, r: float, g: float, b: float) -> None:
@@ -85,7 +87,9 @@ class PdfCanvas:
         self.commands.append(f"{r:.3f} {g:.3f} {b:.3f} RG")
 
     def text(self, x: float, y: float, value: str, size: int = 10, font: str = "Helvetica") -> None:
-        self.commands.append(f"BT /{font} {size} Tf 1 0 0 1 {x:.2f} {y:.2f} Tm ({_pdf_escape(value)}) Tj ET")
+        self.commands.append(
+            f"BT /{font} {size} Tf 1 0 0 1 {x:.2f} {y:.2f} Tm ({_pdf_escape(value)}) Tj ET"
+        )
 
     def line(self, x1: float, y1: float, x2: float, y2: float, width: float = 0.6) -> None:
         self.commands.append(f"{width:.2f} w {x1:.2f} {y1:.2f} m {x2:.2f} {y2:.2f} l S")
@@ -177,7 +181,9 @@ def _build_pdf(title: str, pages: list[list[str]]) -> bytes:
 
     for commands in pages:
         stream = "\n".join(commands).encode("latin-1", errors="replace")
-        content_id = add_object(b"<< /Length " + str(len(stream)).encode() + b" >>\nstream\n" + stream + b"\nendstream")
+        content_id = add_object(
+            b"<< /Length " + str(len(stream)).encode() + b" >>\nstream\n" + stream + b"\nendstream"
+        )
         content_ids.append(content_id)
         page_id = add_object(
             (
@@ -220,7 +226,9 @@ def render_offer(offer: Offer) -> bytes:
     canvas.key_value("Date", offer.date)
     canvas.small_lines([offer.candidate, *offer.candidate_address])
     canvas.set_color(0.06, 0.22, 0.34)
-    canvas.text(MARGIN_X, canvas.y, f"Subject: Offer of Employment - {offer.role}", 11, "Helvetica-Bold")
+    canvas.text(
+        MARGIN_X, canvas.y, f"Subject: Offer of Employment - {offer.role}", 11, "Helvetica-Bold"
+    )
     canvas.y -= 22
     canvas.paragraph(f"Dear {offer.candidate.split()[0]},")
     canvas.paragraph(offer.intro)
@@ -258,7 +266,10 @@ OFFERS = [
         filename="01_mainland_software_engineer_compliant.pdf",
         company="Desert Falcon Technologies LLC",
         brand="Desert Falcon",
-        address=["Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE", "TRN 100487392100003 | hr@desertfalcon.example"],
+        address=[
+            "Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE",
+            "TRN 100487392100003 | hr@desertfalcon.example",
+        ],
         reference="DFT/HR/OFFER/2026/091",
         date="17 August 2026",
         candidate="Mariam Khalid",
@@ -278,12 +289,30 @@ OFFERS = [
             ("Gross monthly salary", "AED 22,000 paid through WPS"),
         ],
         clauses=[
-            ("Contract and Probation", "Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law."),
-            ("Working Hours", "Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy."),
-            ("Leave and Benefits", "You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of-service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service."),
-            ("Notice and Termination", "After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted."),
-            ("Confidentiality", "You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities."),
-            ("Governing Law", "This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts."),
+            (
+                "Contract and Probation",
+                "Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law.",
+            ),
+            (
+                "Working Hours",
+                "Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy.",
+            ),
+            (
+                "Leave and Benefits",
+                "You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of-service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service.",
+            ),
+            (
+                "Notice and Termination",
+                "After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted.",
+            ),
+            (
+                "Confidentiality",
+                "You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities.",
+            ),
+            (
+                "Governing Law",
+                "This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts.",
+            ),
         ],
         signer="Noura Al Mansoori",
         signer_title="Head of People Operations",
@@ -293,7 +322,10 @@ OFFERS = [
         filename="02_probation_notice_risk_operations_manager.pdf",
         company="Al Noor Logistics Services LLC",
         brand="Al Noor Logistics",
-        address=["Warehouse B12, Industrial Area 13, Sharjah, UAE", "PO Box 78162 | recruitment@alnoorlogistics.example"],
+        address=[
+            "Warehouse B12, Industrial Area 13, Sharjah, UAE",
+            "PO Box 78162 | recruitment@alnoorlogistics.example",
+        ],
         reference="ANL-HR-2668-26",
         date="24 August 2026",
         candidate="Rakesh Menon",
@@ -309,12 +341,30 @@ OFFERS = [
             ("Bonus", "Discretionary, not guaranteed"),
         ],
         clauses=[
-            ("Probation", "Your probation period will be six months. The company may terminate the employment at any time during probation without notice or payment, and the employee must give 90 days notice if resigning during probation."),
-            ("Working Hours", "You will work the hours necessary for logistics operations, including nights, weekends and public holidays when required. No separate overtime is payable unless approved by the Managing Director in advance."),
-            ("Annual Leave", "Annual leave will be granted as per business requirements and company policy after management approval."),
-            ("Termination After Probation", "After confirmation, the employee must give 90 days notice. The company may terminate by giving 30 days notice or salary in lieu, at its sole discretion."),
-            ("Non-Competition", "For 24 months after leaving, you must not work for any logistics, transport, warehouse, shipping or supply-chain business in the UAE or GCC."),
-            ("Governing Law", "This offer is subject to UAE law and company policies as amended from time to time."),
+            (
+                "Probation",
+                "Your probation period will be six months. The company may terminate the employment at any time during probation without notice or payment, and the employee must give 90 days notice if resigning during probation.",
+            ),
+            (
+                "Working Hours",
+                "You will work the hours necessary for logistics operations, including nights, weekends and public holidays when required. No separate overtime is payable unless approved by the Managing Director in advance.",
+            ),
+            (
+                "Annual Leave",
+                "Annual leave will be granted as per business requirements and company policy after management approval.",
+            ),
+            (
+                "Termination After Probation",
+                "After confirmation, the employee must give 90 days notice. The company may terminate by giving 30 days notice or salary in lieu, at its sole discretion.",
+            ),
+            (
+                "Non-Competition",
+                "For 24 months after leaving, you must not work for any logistics, transport, warehouse, shipping or supply-chain business in the UAE or GCC.",
+            ),
+            (
+                "Governing Law",
+                "This offer is subject to UAE law and company policies as amended from time to time.",
+            ),
         ],
         signer="Faisal Rahman",
         signer_title="HR & Administration Manager",
@@ -324,7 +374,10 @@ OFFERS = [
         filename="03_unclear_compensation_sales_executive.pdf",
         company="Gulf Pearl Trading LLC",
         brand="Gulf Pearl Trading",
-        address=["12th Floor, Corniche Plaza, Abu Dhabi, UAE", "www.gulfpearl.example | careers@gulfpearl.example"],
+        address=[
+            "12th Floor, Corniche Plaza, Abu Dhabi, UAE",
+            "www.gulfpearl.example | careers@gulfpearl.example",
+        ],
         reference="GPT/OFFER/SE/1184",
         date="2 September 2026",
         candidate="Anika Sharma",
@@ -340,12 +393,30 @@ OFFERS = [
             ("Medical insurance", "Company plan after visa issuance"),
         ],
         clauses=[
-            ("Salary", "The monthly package is inclusive of basic salary, accommodation, transportation, telephone and all other allowances. Payroll will allocate the basic salary internally for administrative purposes."),
-            ("Probation and Notice", "The probation period is six months. During probation, either party may end employment in line with UAE labour law. After confirmation, notice is 30 days."),
-            ("Targets and Incentives", "Commission is payable only if the employee is actively employed on the payout date. The company may amend the commission plan without prior notice."),
-            ("Leave", "Annual leave and sick leave will be as per UAE labour law and company policy."),
-            ("Deductions", "The company may deduct unreturned stock, damaged samples, traffic fines, advances and other amounts owed from salary or final settlement where permitted by law."),
-            ("End of Service", "End-of-service benefits will be calculated as required by UAE law."),
+            (
+                "Salary",
+                "The monthly package is inclusive of basic salary, accommodation, transportation, telephone and all other allowances. Payroll will allocate the basic salary internally for administrative purposes.",
+            ),
+            (
+                "Probation and Notice",
+                "The probation period is six months. During probation, either party may end employment in line with UAE labour law. After confirmation, notice is 30 days.",
+            ),
+            (
+                "Targets and Incentives",
+                "Commission is payable only if the employee is actively employed on the payout date. The company may amend the commission plan without prior notice.",
+            ),
+            (
+                "Leave",
+                "Annual leave and sick leave will be as per UAE labour law and company policy.",
+            ),
+            (
+                "Deductions",
+                "The company may deduct unreturned stock, damaged samples, traffic fines, advances and other amounts owed from salary or final settlement where permitted by law.",
+            ),
+            (
+                "End of Service",
+                "End-of-service benefits will be calculated as required by UAE law.",
+            ),
         ],
         signer="Hiba Qureshi",
         signer_title="Senior Recruitment Officer",
@@ -371,11 +442,26 @@ OFFERS = [
             ("Shift allowance", "Included unless separately approved"),
         ],
         clauses=[
-            ("Shift Pattern", "You will work six days per week on rotating shifts. Shift timings may change at short notice depending on campaign requirements. The employee agrees to work additional hours without separate overtime unless approved in writing."),
-            ("Annual Leave", "Paid annual leave is 21 calendar days per completed year of service. Leave during the first year is subject to operational approval and may be deferred."),
-            ("Sick Leave", "Sick leave is unpaid during the first year of employment unless the company decides otherwise."),
-            ("Probation", "Probation is six months. Termination during probation will follow applicable UAE labour law."),
-            ("Policies", "You agree that the company may amend working hours, leave schedules, location and benefits based on client requirements."),
+            (
+                "Shift Pattern",
+                "You will work six days per week on rotating shifts. Shift timings may change at short notice depending on campaign requirements. The employee agrees to work additional hours without separate overtime unless approved in writing.",
+            ),
+            (
+                "Annual Leave",
+                "Paid annual leave is 21 calendar days per completed year of service. Leave during the first year is subject to operational approval and may be deferred.",
+            ),
+            (
+                "Sick Leave",
+                "Sick leave is unpaid during the first year of employment unless the company decides otherwise.",
+            ),
+            (
+                "Probation",
+                "Probation is six months. Termination during probation will follow applicable UAE labour law.",
+            ),
+            (
+                "Policies",
+                "You agree that the company may amend working hours, leave schedules, location and benefits based on client requirements.",
+            ),
             ("Applicable Law", "UAE law applies."),
         ],
         signer="Omar Haddad",
@@ -386,7 +472,10 @@ OFFERS = [
         filename="05_non_compete_confidentiality_sales_director.pdf",
         company="Atlas Medical Supplies LLC",
         brand="Atlas Medical",
-        address=["Unit 210, Dubai Healthcare City, Dubai, UAE", "Commercial Licence 782144 | hr@atlasmedical.example"],
+        address=[
+            "Unit 210, Dubai Healthcare City, Dubai, UAE",
+            "Commercial Licence 782144 | hr@atlasmedical.example",
+        ],
         reference="AMS-EXE-OFFER-2026-07",
         date="9 September 2026",
         candidate="Daniel Okafor",
@@ -403,11 +492,26 @@ OFFERS = [
             ("Gross salary", "AED 45,000 per month"),
         ],
         clauses=[
-            ("Probation and Notice", "The probation period is six months. After confirmation, either party may terminate by giving 90 days written notice."),
-            ("Sales Incentive", "Participation in the sales incentive plan is discretionary. No incentive is earned unless the company has collected customer payment and the employee remains employed on the payout date."),
-            ("Confidentiality", "All customer names, pricing, supplier terms, product margins, tender strategies and market information are company confidential. These restrictions apply indefinitely after termination."),
-            ("Non-Competition", "For 24 months after termination, you must not work for, advise, invest in or assist any business selling healthcare, medical, laboratory, pharmaceutical or related products in the UAE, GCC, Middle East, Europe, Asia or any market where the company may operate."),
-            ("Non-Solicitation", "For 24 months you must not contact any customer, hospital, clinic, distributor, employee or supplier that had any relationship with the company during your employment."),
+            (
+                "Probation and Notice",
+                "The probation period is six months. After confirmation, either party may terminate by giving 90 days written notice.",
+            ),
+            (
+                "Sales Incentive",
+                "Participation in the sales incentive plan is discretionary. No incentive is earned unless the company has collected customer payment and the employee remains employed on the payout date.",
+            ),
+            (
+                "Confidentiality",
+                "All customer names, pricing, supplier terms, product margins, tender strategies and market information are company confidential. These restrictions apply indefinitely after termination.",
+            ),
+            (
+                "Non-Competition",
+                "For 24 months after termination, you must not work for, advise, invest in or assist any business selling healthcare, medical, laboratory, pharmaceutical or related products in the UAE, GCC, Middle East, Europe, Asia or any market where the company may operate.",
+            ),
+            (
+                "Non-Solicitation",
+                "For 24 months you must not contact any customer, hospital, clinic, distributor, employee or supplier that had any relationship with the company during your employment.",
+            ),
             ("Governing Law", "This offer is governed by UAE law."),
         ],
         signer="Layla Saeed",
@@ -418,7 +522,10 @@ OFFERS = [
         filename="06_free_zone_jurisdiction_ambiguity_finance_analyst.pdf",
         company="Crescent Bay Capital FZ-LLC",
         brand="Crescent Bay Capital",
-        address=["Level 15, Index Tower, Dubai International Financial Centre, Dubai, UAE", "Private and confidential"],
+        address=[
+            "Level 15, Index Tower, Dubai International Financial Centre, Dubai, UAE",
+            "Private and confidential",
+        ],
         reference="CBC/HR/FA/2026/33",
         date="12 September 2026",
         candidate="Yusuf Khan",
@@ -434,12 +541,30 @@ OFFERS = [
             ("Benefits", "Medical insurance under company scheme"),
         ],
         clauses=[
-            ("Employment Framework", "The company office is located in a UAE free zone. The final contract may be issued under mainland UAE labour law, DIFC employment law or another applicable free-zone framework depending on internal structuring."),
-            ("Probation", "The probation period is six months. Notice during probation will be advised in the final contract."),
-            ("Hours and Leave", "Working hours and annual leave will follow company policy applicable to the relevant employing entity."),
-            ("Confidentiality and Data", "You must keep investor information, financial models, client data and fund information confidential during and after employment."),
-            ("Jurisdiction", "The courts of Dubai shall have exclusive jurisdiction over disputes, except where mandatory UAE law, DIFC law or another free-zone authority applies."),
-            ("Condition Precedent", "This offer is conditional on completion of compliance screening and approval by the relevant licensing authority where required."),
+            (
+                "Employment Framework",
+                "The company office is located in a UAE free zone. The final contract may be issued under mainland UAE labour law, DIFC employment law or another applicable free-zone framework depending on internal structuring.",
+            ),
+            (
+                "Probation",
+                "The probation period is six months. Notice during probation will be advised in the final contract.",
+            ),
+            (
+                "Hours and Leave",
+                "Working hours and annual leave will follow company policy applicable to the relevant employing entity.",
+            ),
+            (
+                "Confidentiality and Data",
+                "You must keep investor information, financial models, client data and fund information confidential during and after employment.",
+            ),
+            (
+                "Jurisdiction",
+                "The courts of Dubai shall have exclusive jurisdiction over disputes, except where mandatory UAE law, DIFC law or another free-zone authority applies.",
+            ),
+            (
+                "Condition Precedent",
+                "This offer is conditional on completion of compliance screening and approval by the relevant licensing authority where required.",
+            ),
         ],
         signer="Maha Ibrahim",
         signer_title="People & Compliance Lead",
@@ -449,7 +574,10 @@ OFFERS = [
         filename="07_visa_relocation_repayment_marketing_specialist.pdf",
         company="Sunrise Hospitality Group LLC",
         brand="Sunrise Hospitality",
-        address=["Cluster T, Jumeirah Lakes Towers, Dubai, UAE", "PO Box 504229 | people@sunrisehospitality.example"],
+        address=[
+            "Cluster T, Jumeirah Lakes Towers, Dubai, UAE",
+            "PO Box 504229 | people@sunrisehospitality.example",
+        ],
         reference="SHG/Offer/MKT/7721",
         date="16 September 2026",
         candidate="Elena Rossi",
@@ -465,11 +593,26 @@ OFFERS = [
             ("Relocation support", "Flight and initial hotel arranged by company"),
         ],
         clauses=[
-            ("Visa and Onboarding", "The company will arrange your UAE employment visa, work permit, Emirates ID process and medical insurance required for employment."),
-            ("Repayment Undertaking", "If you resign or are terminated for cause within 18 months, you must repay all recruitment, visa, work permit, Emirates ID, medical test, flight, temporary accommodation and agency costs paid by the company."),
-            ("Probation", "The probation period is six months. During probation, notice will be handled in accordance with UAE labour law."),
-            ("Leave", "You are entitled to 30 calendar days of annual leave after one year of service. Sick leave is as per UAE labour law."),
-            ("Notice", "After probation, either party may terminate by giving 45 days written notice."),
+            (
+                "Visa and Onboarding",
+                "The company will arrange your UAE employment visa, work permit, Emirates ID process and medical insurance required for employment.",
+            ),
+            (
+                "Repayment Undertaking",
+                "If you resign or are terminated for cause within 18 months, you must repay all recruitment, visa, work permit, Emirates ID, medical test, flight, temporary accommodation and agency costs paid by the company.",
+            ),
+            (
+                "Probation",
+                "The probation period is six months. During probation, notice will be handled in accordance with UAE labour law.",
+            ),
+            (
+                "Leave",
+                "You are entitled to 30 calendar days of annual leave after one year of service. Sick leave is as per UAE labour law.",
+            ),
+            (
+                "Notice",
+                "After probation, either party may terminate by giving 45 days written notice.",
+            ),
             ("Governing Law", "This employment is governed by UAE law."),
         ],
         signer="Khaled Barakat",
@@ -494,8 +637,14 @@ OFFERS = [
             ("Other details", "As per company policy"),
         ],
         clauses=[
-            ("Terms", "Your start date, work location, reporting manager, probation period, leave entitlement, working hours, benefits, visa process, notice period and other terms will be confirmed in the employment contract and company policies after joining."),
-            ("Policies", "You agree to follow all current and future policies of the company. The company may amend your duties, location, reporting line, working hours, benefits and policies at its discretion."),
+            (
+                "Terms",
+                "Your start date, work location, reporting manager, probation period, leave entitlement, working hours, benefits, visa process, notice period and other terms will be confirmed in the employment contract and company policies after joining.",
+            ),
+            (
+                "Policies",
+                "You agree to follow all current and future policies of the company. The company may amend your duties, location, reporting line, working hours, benefits and policies at its discretion.",
+            ),
             ("Acceptance", "Please sign below to accept this offer."),
         ],
         signer="Human Resources",

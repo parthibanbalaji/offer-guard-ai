@@ -85,11 +85,7 @@ def default_rule_base_path() -> Path:
 
 def source_rule_base_path() -> Path:
     """Return the rule-base path when running from the source tree."""
-    return (
-        Path(__file__).resolve().parents[3]
-        / "knowledge_base"
-        / "uae_employment_rules.v1.json"
-    )
+    return Path(__file__).resolve().parents[3] / "knowledge_base" / "uae_employment_rules.v1.json"
 
 
 def load_rule_base(path: str | Path | None = None) -> RuleBase:

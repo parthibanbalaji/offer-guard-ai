@@ -345,9 +345,7 @@ def test_prepare_document_for_review_returns_404_when_missing(monkeypatch) -> No
 
     app.dependency_overrides.clear()
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "document not found: 11111111-1111-1111-1111-111111111111"
-    }
+    assert response.json() == {"detail": "document not found: 11111111-1111-1111-1111-111111111111"}
 
 
 def test_list_document_chunks_returns_auditable_rows(monkeypatch) -> None:

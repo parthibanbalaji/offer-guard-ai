@@ -88,8 +88,6 @@ async def update_review_job_status(
     session_factory = async_sessionmaker(postgres_engine, expire_on_commit=False)
     async with session_factory() as session:
         await session.execute(
-            update(ReviewJob)
-            .where(ReviewJob.id == job_id)
-            .values(status=review_job_status)
+            update(ReviewJob).where(ReviewJob.id == job_id).values(status=review_job_status)
         )
         await session.commit()

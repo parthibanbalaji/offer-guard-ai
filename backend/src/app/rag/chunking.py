@@ -4,6 +4,7 @@ import re
 from collections.abc import Iterable
 from dataclasses import dataclass
 from hashlib import sha256
+from typing import Any
 from uuid import UUID
 
 from app.guardrails.input import flags_for_text
@@ -196,7 +197,7 @@ def split_markdown_with_langchain(
     return tuple(chunks)
 
 
-def make_recursive_splitter(*, target_chars: int, overlap_chars: int):
+def make_recursive_splitter(*, target_chars: int, overlap_chars: int) -> Any:
     """Create the LangChain splitter used for sentence-aware budgeting."""
     from langchain_text_splitters import RecursiveCharacterTextSplitter
 

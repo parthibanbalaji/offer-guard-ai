@@ -10,6 +10,8 @@ from app.domain.rules import RuleBase
 from app.rag.chunking import DocumentChunk
 from app.services.documents import DocumentRecord
 
+__all__ = ["traceable"]
+
 
 def estimate_text_tokens(text: str) -> int:
     """Estimate token count for tracing without requiring provider responses."""
