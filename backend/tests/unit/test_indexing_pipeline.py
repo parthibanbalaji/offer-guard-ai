@@ -34,6 +34,10 @@ async def test_index_uploaded_document_extracts_and_indexes(monkeypatch) -> None
         original_storage_key="documents/original.md",
         upload_status="stored",
         review_job_status="queued",
+        report_status="not_started",
+        report_storage_key=None,
+        report_error_message=None,
+        report_generated_at=None,
         created_at=SimpleNamespace(),
     )
     indexed_seen: list[object] = []

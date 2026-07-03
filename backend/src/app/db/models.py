@@ -41,6 +41,15 @@ class ReviewJobStatus(StrEnum):
     FAILED = "failed"
 
 
+class ReportGenerationStatus(StrEnum):
+    """Lifecycle for generated document reports."""
+
+    NOT_STARTED = "not_started"
+    PROCESSING = "processing"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+
 class Document(Base):
     """Original uploaded offer document stored outside Postgres."""
 
@@ -84,6 +93,10 @@ class Document(Base):
         cascade="all, delete-orphan",
     )
     chunks: Mapped[list["DocumentChunkRow"]] = relationship(
+        back_populates="document",
+        cascade="all, delete-orphan",
+    )
+    reports: Mapped[list["DocumentReport"]] = relationship(
         back_populates="document",
         cascade="all, delete-orphan",
     )
@@ -168,3 +181,49 @@ class DocumentChunkRow(Base):
     )
 
     document: Mapped[Document] = relationship(back_populates="chunks")
+
+
+class DocumentReport(Base):
+    """Generated clause analysis report stored in object storage."""
+
+    __tablename__ = "document_reports"
+    __table_args__ = (
+        CheckConstraint(
+            "status in ('not_started', 'processing', 'completed', 'failed')",
+            name="ck_document_reports_status",
+        ),
+        UniqueConstraint("document_id", name="uq_document_reports_document_id"),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PostgresUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+    document_id: Mapped[UUID] = mapped_column(
+        PostgresUUID(as_uuid=True),
+        ForeignKey("documents.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    status: Mapped[str] = mapped_column(
+        String(32),
+        nullable=False,
+        default=ReportGenerationStatus.NOT_STARTED.value,
+    )
+    report_storage_key: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    report_json: Mapped[dict[str, object] | None] = mapped_column(JSONB, nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    generated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+
+    document: Mapped[Document] = relationship(back_populates="reports")

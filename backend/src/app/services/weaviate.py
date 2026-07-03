@@ -2,8 +2,9 @@
 
 import asyncio
 from collections.abc import Sequence
+from dataclasses import dataclass
 from typing import Any
-from uuid import NAMESPACE_URL, uuid5
+from uuid import NAMESPACE_URL, UUID, uuid5
 
 import weaviate
 
@@ -17,6 +18,14 @@ CHUNK_COLLECTION = "OfferDocumentChunk"
 
 class WeaviateNotReadyError(RuntimeError):
     """Raised when Weaviate reports that it is not ready."""
+
+
+@dataclass(frozen=True)
+class RetrievedChunkMatch:
+    """One semantic retrieval hit from Weaviate."""
+
+    chunk_ordinal: int
+    distance: float | None
 
 
 def create_weaviate_client(settings: Settings) -> Any | None:
@@ -81,6 +90,32 @@ async def index_document_chunks(
     return len(chunks)
 
 
+async def search_document_chunk_ordinals(
+    client: Any | None,
+    *,
+    document_id: UUID,
+    query_text: str,
+    embedding_model: EmbeddingModel,
+    limit: int,
+) -> tuple[RetrievedChunkMatch, ...]:
+    """Return semantically relevant chunk ordinals for one prepared document."""
+    if client is None or limit <= 0:
+        return ()
+
+    vectors = await embedding_model.embed_texts([query_text])
+    if not vectors:
+        return ()
+
+    await ensure_chunk_collection(client)
+    return await asyncio.to_thread(
+        _search_document_chunk_ordinals,
+        client,
+        document_id,
+        vectors[0],
+        limit,
+    )
+
+
 def _ensure_chunk_collection(client: Any) -> None:
     """Synchronous Weaviate collection creation helper."""
     if client.collections.exists(CHUNK_COLLECTION):
@@ -104,6 +139,40 @@ def _ensure_chunk_collection(client: Any) -> None:
             Property(name="guardrail_flags", data_type=DataType.TEXT_ARRAY),
         ],
     )
+
+
+def _search_document_chunk_ordinals(
+    client: Any,
+    document_id: UUID,
+    vector: Sequence[float],
+    limit: int,
+) -> tuple[RetrievedChunkMatch, ...]:
+    """Synchronous Weaviate semantic search helper."""
+    from weaviate.classes.query import Filter, MetadataQuery
+
+    collection = client.collections.get(CHUNK_COLLECTION)
+    response = collection.query.near_vector(
+        near_vector=list(vector),
+        filters=Filter.by_property("document_id").equal(str(document_id)),
+        limit=limit,
+        return_metadata=MetadataQuery(distance=True),
+        return_properties=["chunk_ordinal"],
+    )
+
+    matches: list[RetrievedChunkMatch] = []
+    for item in response.objects:
+        ordinal = item.properties.get("chunk_ordinal")
+        if not isinstance(ordinal, int):
+            continue
+        metadata = getattr(item, "metadata", None)
+        distance = getattr(metadata, "distance", None)
+        matches.append(
+            RetrievedChunkMatch(
+                chunk_ordinal=ordinal,
+                distance=distance if isinstance(distance, float) else None,
+            )
+        )
+    return tuple(matches)
 
 
 def _index_document_chunks(

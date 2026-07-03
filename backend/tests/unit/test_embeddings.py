@@ -4,7 +4,12 @@ import pytest
 
 from app.core.config import Settings
 from app.rag import embeddings
-from app.rag.embeddings import EmbeddingProviderError, create_embedding_model
+from app.rag.embeddings import (
+    CachedEmbeddingModel,
+    EmbeddingProviderError,
+    create_cached_embedding_model,
+    create_embedding_model,
+)
 
 
 def make_settings(**overrides: Any) -> Settings:
@@ -53,6 +58,38 @@ def test_create_embedding_model_configures_openrouter(monkeypatch) -> None:
             "retry_max_seconds": 8,
         }
     ]
+
+
+@pytest.mark.asyncio
+async def test_cached_embedding_model_embeds_each_text_once() -> None:
+    calls: list[list[str]] = []
+
+    class Inner:
+        async def embed_texts(self, texts: list[str]) -> list[list[float]]:
+            calls.append(texts)
+            return [[float(len(text))] for text in texts]
+
+    model = CachedEmbeddingModel(Inner(), namespace="test-cache")
+
+    assert await model.embed_texts(["alpha", "beta", "alpha"]) == [[5.0], [4.0], [5.0]]
+    assert await model.embed_texts(["beta", "gamma"]) == [[4.0], [5.0]]
+    assert calls == [["alpha", "beta"], ["gamma"]]
+
+
+def test_create_cached_embedding_model_uses_model_specific_namespace(monkeypatch) -> None:
+    class FakeEmbeddingModel:
+        async def embed_texts(self, texts: list[str]) -> list[list[float]]:
+            return [[1.0] for _ in texts]
+
+    monkeypatch.setattr(embeddings, "create_embedding_model", lambda _: FakeEmbeddingModel())
+
+    model = create_cached_embedding_model(
+        make_settings(embedding_model="test-model", embedding_dimensions=12),
+        namespace="report-retrieval",
+    )
+
+    assert isinstance(model, CachedEmbeddingModel)
+    assert model.namespace == ("report-retrieval|openai|test-model|https://openrouter.ai/api/v1|12")
 
 
 @pytest.mark.parametrize(

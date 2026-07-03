@@ -38,6 +38,26 @@ async def upload_file_object(
     await anyio.to_thread.run_sync(upload)
 
 
+async def upload_bytes_object(
+    client: Any,
+    bucket: str,
+    key: str,
+    content: bytes,
+    content_type: str,
+) -> None:
+    """Upload in-memory bytes to S3-compatible storage."""
+
+    def put_object() -> None:
+        client.put_object(
+            Bucket=bucket,
+            Key=key,
+            Body=content,
+            ContentType=content_type,
+        )
+
+    await anyio.to_thread.run_sync(put_object)
+
+
 async def get_file_object(client: Any, bucket: str, key: str) -> Any:
     """Return an object from S3-compatible storage."""
 

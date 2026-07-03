@@ -28,6 +28,7 @@ def configure_test_app(monkeypatch, settings: Settings) -> tuple[FastAPI, Any]:
         postgres_engine=object(),
         storage_client=object(),
         weaviate_client=object(),
+        uae_rule_base=object(),
     )
 
     def create_app_resources(_: Settings) -> object:
@@ -163,6 +164,10 @@ def test_list_documents_returns_stored_documents(monkeypatch) -> None:
                 original_storage_key="documents/111/original.txt",
                 upload_status="stored",
                 review_job_status="queued",
+                report_status="not_started",
+                report_storage_key=None,
+                report_error_message=None,
+                report_generated_at=None,
                 created_at=datetime(2026, 7, 1, 12, 0, tzinfo=UTC),
             )
         ]
@@ -187,6 +192,10 @@ def test_list_documents_returns_stored_documents(monkeypatch) -> None:
             "checksum_sha256": "checksum",
             "upload_status": "stored",
             "review_job_status": "queued",
+            "report_status": "not_started",
+            "report_available": False,
+            "report_error_message": None,
+            "report_generated_at": None,
             "created_at": "2026-07-01T12:00:00Z",
         }
     ]
@@ -211,6 +220,10 @@ def test_download_document_streams_original_file(monkeypatch) -> None:
             original_storage_key="documents/111/original.txt",
             upload_status="stored",
             review_job_status="queued",
+            report_status="not_started",
+            report_storage_key=None,
+            report_error_message=None,
+            report_generated_at=None,
             created_at=datetime(2026, 7, 1, 12, 0, tzinfo=UTC),
         )
 
@@ -274,6 +287,10 @@ def test_prepare_document_for_review_runs_manual_processing(monkeypatch) -> None
         original_storage_key="documents/111/original.txt",
         upload_status="stored",
         review_job_status="queued",
+        report_status="not_started",
+        report_storage_key=None,
+        report_error_message=None,
+        report_generated_at=None,
         created_at=datetime(2026, 7, 1, 12, 0, tzinfo=UTC),
     )
 
@@ -365,6 +382,10 @@ def test_list_document_chunks_returns_auditable_rows(monkeypatch) -> None:
         original_storage_key="documents/111/original.pdf",
         upload_status="stored",
         review_job_status="completed",
+        report_status="not_started",
+        report_storage_key=None,
+        report_error_message=None,
+        report_generated_at=None,
         created_at=datetime(2026, 7, 1, 12, 0, tzinfo=UTC),
     )
 

@@ -40,6 +40,8 @@ def test_to_document_record_maps_document_and_job_rows() -> None:
     assert record.job_id == review_job.id
     assert record.original_filename == "offer.txt"
     assert record.review_job_status == "queued"
+    assert record.report_status == "not_started"
+    assert record.report_storage_key is None
 
 
 @pytest.mark.asyncio

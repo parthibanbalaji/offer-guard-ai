@@ -27,6 +27,9 @@ class EmbeddingProviderError(RuntimeError):
         self.kind = kind
 
 
+_EMBEDDING_CACHE: dict[tuple[str, str], tuple[float, ...]] = {}
+
+
 class OpenAIEmbeddingModel:
     """LangChain OpenAI-compatible embedding adapter for production retrieval."""
 
@@ -105,6 +108,32 @@ class HashEmbeddingModel:
         return [value / magnitude for value in buckets]
 
 
+class CachedEmbeddingModel:
+    """Caches deterministic embedding requests by namespace and exact text."""
+
+    def __init__(self, inner: EmbeddingModel, *, namespace: str) -> None:
+        self.inner = inner
+        self.namespace = namespace
+
+    async def embed_texts(self, texts: Sequence[str]) -> list[list[float]]:
+        """Return cached vectors, embedding only missing texts."""
+        missing_texts: list[str] = []
+        missing_keys: list[tuple[str, str]] = []
+        for text in texts:
+            key = (self.namespace, text)
+            if key in _EMBEDDING_CACHE or key in missing_keys:
+                continue
+            missing_texts.append(text)
+            missing_keys.append(key)
+
+        if missing_texts:
+            vectors = await self.inner.embed_texts(missing_texts)
+            for key, vector in zip(missing_keys, vectors, strict=True):
+                _EMBEDDING_CACHE[key] = tuple(vector)
+
+        return [list(_EMBEDDING_CACHE[(self.namespace, text)]) for text in texts]
+
+
 def create_embedding_model(settings: Settings) -> EmbeddingModel:
     """Create the configured embedding model."""
     if settings.embedding_provider == "openai":
@@ -126,6 +155,27 @@ def create_embedding_model(settings: Settings) -> EmbeddingModel:
         )
 
     return HashEmbeddingModel(settings.embedding_dimensions)
+
+
+def create_cached_embedding_model(settings: Settings, *, namespace: str) -> EmbeddingModel:
+    """Create an embedding model with a process-local cache."""
+    return CachedEmbeddingModel(
+        create_embedding_model(settings),
+        namespace=embedding_cache_namespace(settings, namespace),
+    )
+
+
+def embedding_cache_namespace(settings: Settings, namespace: str) -> str:
+    """Return a model-specific cache namespace without including secrets."""
+    return "|".join(
+        (
+            namespace,
+            settings.embedding_provider,
+            settings.embedding_model,
+            settings.embedding_base_url,
+            str(settings.embedding_dimensions),
+        )
+    )
 
 
 def classify_embedding_exception(exc: Exception) -> EmbeddingProviderError:
