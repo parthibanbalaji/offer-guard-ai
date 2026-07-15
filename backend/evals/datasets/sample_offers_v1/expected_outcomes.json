@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "sample_offers_v1",
+  "description": "Case-level expectations for the synthetic UAE offer fixtures. The eval runner still creates one row for every rule-base clause in every offer; outcomes listed here identify the primary expected findings for each case.",
+  "default_expected_outcome": "not_primary_fixture_focus",
+  "cases": {
+    "01_mainland_software_engineer_compliant.pdf": {
+      "case_summary": "Compliant mainland private-sector offer with clear salary split, leave, notice, confidentiality carve-out, and UAE law.",
+      "expected_outcomes": {
+        "probation_period": "acceptable",
+        "notice_period": "acceptable",
+        "salary_and_compensation": "acceptable",
+        "working_hours": "acceptable",
+        "annual_leave": "acceptable",
+        "termination": "acceptable",
+        "confidentiality": "acceptable",
+        "governing_law_jurisdiction": "acceptable"
+      }
+    },
+    "02_probation_notice_risk_operations_manager.pdf": {
+      "case_summary": "Probation and notice asymmetry risks, unclear salary split, overtime/leave gaps, and broad non-compete.",
+      "expected_outcomes": {
+        "probation_period": "risk",
+        "notice_period": "risk",
+        "salary_and_compensation": "risk",
+        "working_hours": "risk",
+        "annual_leave": "unclear",
+        "termination": "risk",
+        "non_compete_restrictive_covenants": "risk",
+        "missing_unclear_mandatory_terms": "risk"
+      }
+    },
+    "03_unclear_compensation_sales_executive.pdf": {
+      "case_summary": "Salary package lacks a clear basic salary and allowance split; deductions and commission terms need review.",
+      "expected_outcomes": {
+        "salary_and_compensation": "risk",
+        "notice_period": "acceptable",
+        "probation_period": "acceptable",
+        "annual_leave": "acceptable",
+        "sick_leave": "acceptable",
+        "end_of_service_gratuity": "acceptable",
+        "missing_unclear_mandatory_terms": "risk"
+      }
+    },
+    "04_leave_hours_customer_support_risk.pdf": {
+      "case_summary": "Working-hours, overtime, annual leave, sick leave, and employer-discretion policy risks.",
+      "expected_outcomes": {
+        "working_hours": "risk",
+        "annual_leave": "risk",
+        "sick_leave": "risk",
+        "probation_period": "acceptable",
+        "missing_unclear_mandatory_terms": "risk"
+      }
+    },
+    "05_non_compete_confidentiality_sales_director.pdf": {
+      "case_summary": "Broad non-compete, non-solicit, and indefinite confidentiality restrictions for a senior sales role.",
+      "expected_outcomes": {
+        "non_compete_restrictive_covenants": "risk",
+        "confidentiality": "risk",
+        "notice_period": "acceptable",
+        "probation_period": "acceptable",
+        "salary_and_compensation": "acceptable",
+        "governing_law_jurisdiction": "acceptable"
+      }
+    },
+    "06_free_zone_jurisdiction_ambiguity_finance_analyst.pdf": {
+      "case_summary": "DIFC/free-zone framework and jurisdiction ambiguity, with several core terms deferred to policy or a later contract.",
+      "expected_outcomes": {
+        "governing_law_jurisdiction": "risk",
+        "missing_unclear_mandatory_terms": "risk",
+        "salary_and_compensation": "unclear",
+        "probation_period": "unclear",
+        "working_hours": "unclear",
+        "annual_leave": "unclear",
+        "confidentiality": "acceptable"
+      }
+    },
+    "07_visa_relocation_repayment_marketing_specialist.pdf": {
+      "case_summary": "Visa, work permit, recruitment, and relocation repayment risk despite otherwise clear UAE employment terms.",
+      "expected_outcomes": {
+        "visa_sponsorship_employment_eligibility": "risk",
+        "salary_and_compensation": "acceptable",
+        "probation_period": "acceptable",
+        "annual_leave": "acceptable",
+        "sick_leave": "acceptable",
+        "notice_period": "acceptable",
+        "governing_law_jurisdiction": "acceptable"
+      }
+    },
+    "08_brief_offer_missing_terms_consultant.pdf": {
+      "case_summary": "Brief offer defers most mandatory terms to future documents and policies.",
+      "expected_outcomes": {
+        "missing_unclear_mandatory_terms": "risk",
+        "probation_period": "missing",
+        "notice_period": "missing",
+        "salary_and_compensation": "unclear",
+        "working_hours": "missing",
+        "annual_leave": "missing",
+        "sick_leave": "missing",
+        "termination": "missing",
+        "end_of_service_gratuity": "missing",
+        "visa_sponsorship_employment_eligibility": "missing"
+      }
+    }
+  }
+}

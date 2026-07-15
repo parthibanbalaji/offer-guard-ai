@@ -1,0 +1,385 @@
+{
+  "rows": [
+    {
+      "answer_correctness": 0.6820375771,
+      "answer_relevancy": 0.580261822,
+      "context_precision": 0.8333333333,
+      "context_recall": 0.3333333333,
+      "criteria_id": "probation_period",
+      "criteria_title": "Probation period",
+      "expected_outcome": "acceptable",
+      "faithfulness": 0.4,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer states a three-month probation period, which is within the UAE six-month maximum. It also says either party may terminate during probation by giving notice in accordance with applicable UAE labour law. The answer should treat the clause as acceptable while noting that the exact probation notice period is not spelled out.",
+      "response": "Score: 72\nSummary: Probation period is three months (within the six\u2011month limit) but notice terms are vague.\nObservations: Probation duration is stated as three months (chunk_ordinal 0).; Clause notes that either party may terminate during probation by giving notice in accordance with UAE labour law, but no specific notice period is provided (chunk_ordinal 1).\nRisks: Absence of a defined notice period creates uncertainty for both employer and employee.; No explicit resignation or mobility terms for the probationary period.\nRecommendations: Ask the employer to specify the exact notice period required for termination or resignation during probation.; Confirm whether any relocation or mobility obligations apply during probation.",
+      "retrieved_context_ids": [
+        "1",
+        "2",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "probation_max_six_months",
+        "probation_termination_notice"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:probation_period",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Probation period'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: probation duration, probation notice period, probation resignation terms, probation start and end wording, probation termination terms."
+    },
+    {
+      "answer_correctness": 0.8012818678,
+      "answer_relevancy": 0.7007095613,
+      "context_precision": null,
+      "context_recall": 0.5,
+      "criteria_id": "notice_period",
+      "criteria_title": "Notice period",
+      "expected_outcome": "acceptable",
+      "faithfulness": 0.6153846154,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer states that after probation either party may terminate employment by giving 60 days written notice. A 60-day written notice period is within the ordinary UAE 30-to-90-day range. The company may place the employee on garden leave or pay in lieu of notice where permitted. The answer should treat this as acceptable and may mention that notice-compensation mechanics could be clearer.",
+      "response": "Score: 92\nSummary: Notice period meets UAE statutory range and is in writing, with symmetric termination rights and optional pay\u2011in\u2011lieu provision.\nObservations: 60 days written notice after probation (within 30\u201190 days).; Either party may terminate, indicating symmetric notice obligations.; Company may place employee on garden leave or pay in lieu of notice where permitted.\nRisks: The phrase \u201cwhere permitted\u201d may create uncertainty about the employer\u2019s ability to waive notice without employee consent.\nRecommendations: Ask for clarification that the right to pay in lieu of notice applies equally to both parties and that any waiver complies with UAE law.",
+      "retrieved_context_ids": [
+        "1",
+        "2",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "notice_between_30_and_90_days",
+        "notice_compensation"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:notice_period",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Notice period'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: notice compensation wording, notice period duration, payment in lieu wording, who may terminate, written notice requirement."
+    },
+    {
+      "answer_correctness": null,
+      "answer_relevancy": 0.4893898204,
+      "context_precision": 0.9999999999,
+      "context_recall": 0.3333333333,
+      "criteria_id": "salary_and_compensation",
+      "criteria_title": "Salary and compensation",
+      "expected_outcome": "acceptable",
+      "faithfulness": 0.6153846154,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer clearly separates basic salary from allowances: AED 14,000 basic salary, AED 5,000 housing allowance, AED 2,000 transport allowance, AED 1,000 other allowance, and AED 22,000 gross monthly salary paid through WPS. The answer should treat salary clarity as acceptable. It may note that no deduction or clawback clause is provided, which is not a problem in this compliant fixture.",
+      "response": "Score: 85\nSummary: Salary components are clearly itemised, but no deduction clause is provided.\nObservations: Basic salary AED 14,000/month and allowances (housing AED 5,000, transport AED 2,000, other AED 1,000) are listed with gross monthly salary AED 22,000 and payment through WPS.\nRisks: Absence of any salary deduction clause may allow undisclosed future deductions, creating legal uncertainty.\nRecommendations: Ask the employer to confirm that no salary deductions will be applied, or request a clause detailing any permissible deductions with their lawful basis.",
+      "retrieved_context_ids": [
+        "0",
+        "1",
+        "2"
+      ],
+      "retrieved_contexts": [
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours",
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2"
+      ],
+      "rule_ids": [
+        "salary_components_clear",
+        "deductions_need_basis"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:salary_and_compensation",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Salary and compensation'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: allowances, basic salary amount, currency, deduction clause, payment frequency, set-off wording, training repayment."
+    },
+    {
+      "answer_correctness": 0.5109363302,
+      "answer_relevancy": 0.5274672702,
+      "context_precision": 0.9999999999,
+      "context_recall": 0.6666666667,
+      "criteria_id": "working_hours",
+      "criteria_title": "Working hours",
+      "expected_outcome": "acceptable",
+      "faithfulness": 0.6923076923,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer states normal working hours are eight hours per day, Monday to Friday. It also says approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. The answer should treat the working-hours clause as acceptable, with optional clarification that the weekly total is implied rather than separately stated.",
+      "response": "Score: 80\nSummary: Working hours clause provides daily hours and mentions overtime/Ramadan handling but lacks explicit weekly hours and overtime pay details.\nObservations: Daily hours stated as eight per day, Monday to Friday.; Overtime and Ramadan hour adjustments will be handled in accordance with UAE labour law and company policy.\nRisks: Weekly hours not explicitly stated; could be ambiguous.; No detail on overtime compensation rates or entitlement.; Rest\u2011day work policy not addressed.\nRecommendations: Ask the employer to confirm the total weekly working hours.; Request clarification on overtime pay rates and eligibility.; Obtain the company's policy on work performed on rest days.",
+      "retrieved_context_ids": [
+        "1",
+        "2",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "normal_hours_limit",
+        "overtime_and_ramadans_hours"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:working_hours",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Working hours'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: Ramadan hours, daily hours, overtime wording, rest day work, weekly hours, work pattern, work schedule."
+    },
+    {
+      "answer_correctness": 0.5664058112,
+      "answer_relevancy": 0.5702749104,
+      "context_precision": 0.9999999999,
+      "context_recall": 0.6666666667,
+      "criteria_id": "annual_leave",
+      "criteria_title": "Annual leave",
+      "expected_outcome": "acceptable",
+      "faithfulness": 0.6363636364,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer states the employee is entitled to annual leave in accordance with UAE labour law and specifically gives 30 calendar days after completing one year of service. The answer should treat the annual leave entitlement as acceptable. It may mention that first-year accrual and unused-leave handling are not detailed in the offer.",
+      "response": "Score: 68\nSummary: Annual leave days are stated (30 days after one year) but paid status and accrual details are missing.\nObservations: Clause mentions \"Annual leave entitlement is 30 calendar days after completing one year of service\".; Clause states entitlement \"in accordance with UAE labour law\" but does not explicitly say the leave is paid.\nRisks: Unclear whether the 30 days are paid, which may lead to disputes.; No accrual wording for leave earned before completing one year (e.g., two days per month after six months).\nRecommendations: Add explicit wording that the annual leave is paid.; Include accrual provisions, such as \"two days of leave per month after six months of service\" to cover the period before one year.",
+      "retrieved_context_ids": [
+        "1",
+        "2",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "annual_leave_minimum",
+        "leave_carry_forward_and_payment"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:annual_leave",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Annual leave'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: accrual wording, annual leave days, carry forward, leave encashment, paid leave wording, unused leave."
+    },
+    {
+      "answer_correctness": 0.5326248507,
+      "answer_relevancy": 0.5074812452,
+      "context_precision": 0.9999999999,
+      "context_recall": 0.5,
+      "criteria_id": "sick_leave",
+      "criteria_title": "Sick leave",
+      "expected_outcome": "not_primary_fixture_focus",
+      "faithfulness": 0.5333333333,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer mentions sick leave as a benefit provided in accordance with UAE labour law, but it does not spell out the statutory sick-pay schedule. For this compliant fixture, the answer should treat sick leave as generally acceptable by incorporation of UAE law while noting that the detailed day-count and pay schedule are not written in the offer.",
+      "response": "Score: 35\nSummary: Sick leave is mentioned but lacks any detail on entitlement, pay schedule, or probation\u2011specific provisions.\nObservations: Clause states you are entitled to sick leave in accordance with UAE labour law but provides no number of days or pay rates (Chunk 1).; Probation period is described (three months) but no sick\u2011leave wording related to probation is included (Chunk 0).\nRisks: Potential entitlement below the statutory maximum of 90 days per year (15 days full pay, 30 half pay, 45 unpaid).; Unclear whether medical certificates are required or how pay is calculated, leading to possible disputes.\nRecommendations: Ask the employer to specify the annual sick\u2011leave entitlement (days) and the corresponding pay schedule.; Request clarification on sick\u2011leave rights during the probation period and any medical\u2011certificate requirements.",
+      "retrieved_context_ids": [
+        "1",
+        "2",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "sick_leave_schedule"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:sick_leave",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Sick leave'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: probation sick leave wording, sick leave days, sick pay schedule."
+    },
+    {
+      "answer_correctness": null,
+      "answer_relevancy": 0.4923843116,
+      "context_precision": 0.9999999999,
+      "context_recall": 0.6666666667,
+      "criteria_id": "termination",
+      "criteria_title": "Termination",
+      "expected_outcome": "acceptable",
+      "faithfulness": 0.6111111111,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer gives ordinary post-probation termination rights to either party with 60 days written notice and permits garden leave or pay in lieu where permitted. Probation termination also requires notice in accordance with UAE labour law. The answer should treat termination as acceptable, while optionally noting that summary-dismissal grounds and final-settlement mechanics are not detailed.",
+      "response": "Score: 78\nSummary: Termination clause provides 60\u2011day written notice but omits final settlement details and summary dismissal provisions.\nObservations: After probation, either party may terminate employment by giving 60 days written notice (chunk 1).; The company may place the employee on garden leave or pay in lieu of notice where permitted (chunk 1).; During the three\u2011month probation period either party may terminate by giving notice in accordance with UAE labour law (chunk 0).\nRisks: No explicit clause describing final settlement calculations or entitlement timing.; No definition or limitation of summary dismissal or gross misconduct, which may conflict with Article 44.\nRecommendations: Request a clear final settlement provision outlining end\u2011of\u2011service gratuity, accrued leave payout, and any other dues.; Ask the employer to specify the limited circumstances for summary dismissal and define gross misconduct in line with UAE law.; Confirm that the 60\u2011day notice complies with Articles 42\u201143 of Federal Decree Law No. 33/2021.",
+      "retrieved_context_ids": [
+        "1",
+        "2",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "ordinary_termination_written_notice",
+        "summary_dismissal_is_limited"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:termination",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Termination'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: cause, final settlement, gross misconduct, notice, summary dismissal, termination rights, without notice."
+    },
+    {
+      "answer_correctness": 0.535489866,
+      "answer_relevancy": 0.6698274895,
+      "context_precision": 0.9999999999,
+      "context_recall": 0.6666666667,
+      "criteria_id": "end_of_service_gratuity",
+      "criteria_title": "End-of-service or gratuity",
+      "expected_outcome": "not_primary_fixture_focus",
+      "faithfulness": 0.5,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer states the employee is entitled to end-of-service gratuity in accordance with UAE labour law and states the basic salary amount. It does not write out the gratuity formula. For this compliant fixture, the answer should treat gratuity as acceptable by incorporation of UAE law while noting that the calculation formula is not detailed.",
+      "response": "Score: 65\nSummary: Gratuity is acknowledged but calculation details and exclusions are missing.\nObservations: Gratuity entitlement is mentioned without formula or exclusions.; Basic salary (AED 14,000) is provided, which could be the basis for calculation.\nRisks: Unclear how gratuity will be calculated may result in lower entitlement.; Potential for undisclosed exclusions that could reduce payable gratuity.\nRecommendations: Ask the employer to include the statutory gratuity formula (21 days per year for first 5 years, 30 days thereafter) referencing the basic wage.; Request clarification on any exclusions or caps that may apply.",
+      "retrieved_context_ids": [
+        "1",
+        "2",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "gratuity_formula"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:end_of_service_gratuity",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'End-of-service or gratuity'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: basic wage, exclusions, gratuity clause, service duration."
+    },
+    {
+      "answer_correctness": 0.2622516257,
+      "answer_relevancy": 0.5836551733,
+      "context_precision": 1.0,
+      "context_recall": 0.0,
+      "criteria_id": "non_compete_restrictive_covenants",
+      "criteria_title": "Non-compete or restrictive covenants",
+      "expected_outcome": "not_primary_fixture_focus",
+      "faithfulness": 0.4090909091,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer does not contain a non-compete, non-solicit, or other post-termination restrictive covenant. The answer should not treat the absence of a non-compete as an employee risk in this compliant fixture. It should say no restrictive covenant issue was identified.",
+      "response": "Score: 0\nSummary: No non-compete or restrictive covenant clause was found in the offer.\nObservations: The offer chunks contain confidentiality, termination, and employment details but no mention of duration, geography, restricted activity, or legitimate business interest for a non-compete.\nRisks: Absence of a non-compete clause may leave the employee uncertain about post\u2011termination restrictions.; If a non\u2011compete exists elsewhere, its terms may be non\u2011compliant with UAE limits (e.g., over two years or overly broad).\nRecommendations: Request the full employment contract or a specific clause detailing any non\u2011compete, non\u2011solicit, or restraint provisions.; Verify that any non\u2011compete is limited by time (max 2 years), geography, and activity, and is justified by a legitimate business interest per UAE law.",
+      "retrieved_context_ids": [
+        "2",
+        "1",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "non_compete_limited_scope",
+        "non_compete_max_two_years"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:non_compete_restrictive_covenants",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Non-compete or restrictive covenants'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: duration, geography, legitimate interest, non-compete duration, post-termination period, restricted activity."
+    },
+    {
+      "answer_correctness": 0.4984271791,
+      "answer_relevancy": 0.4920207266,
+      "context_precision": 0.9999999999,
+      "context_recall": 0.5,
+      "criteria_id": "confidentiality",
+      "criteria_title": "Confidentiality",
+      "expected_outcome": "acceptable",
+      "faithfulness": 0.4444444444,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer requires the employee to protect company confidential information during and after employment, and it expressly preserves lawful disclosures to regulators or competent authorities. The answer should treat confidentiality as acceptable, with optional note that the clause does not separately define confidential information.",
+      "response": "Score: 75\nSummary: Confidentiality clause present with duration and lawful disclosure exception, but lacks a clear definition of confidential information.\nObservations: Obligation to protect company confidential information during and after employment.; Explicit exception for lawful disclosures to regulators or competent authorities.\nRisks: Absence of a precise definition may make the clause overly broad and unenforceable.; Indefinite duration without a specified term could be viewed as unreasonable.\nRecommendations: Request the employer to add a clear definition of what constitutes confidential information.; Specify a reasonable post\u2011employment confidentiality period (e.g., 2\u20113 years) to align with UAE best practices.",
+      "retrieved_context_ids": [
+        "2",
+        "1",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "confidentiality_reasonable_scope"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:confidentiality",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Confidentiality'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: definition of confidential information, duration, exceptions."
+    },
+    {
+      "answer_correctness": 0.4525025208,
+      "answer_relevancy": 0.4047218774,
+      "context_precision": 1.0,
+      "context_recall": 0.6666666667,
+      "criteria_id": "governing_law_jurisdiction",
+      "criteria_title": "Governing law and jurisdiction",
+      "expected_outcome": "acceptable",
+      "faithfulness": 0.3333333333,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer states the employment relationship is governed by applicable UAE law and the competent UAE labour authorities and courts. It identifies a UAE mainland contract and a Business Bay, Dubai work location. The answer should treat governing law and jurisdiction as acceptable.",
+      "response": "Score: 95\nSummary: Governing law clause specifies UAE law and competent UAE labour authorities and courts.\nObservations: Clause explicitly states the offer and employment relationship are governed by applicable UAE law and UAE labour authorities and courts.\nRisks: \nRecommendations: No immediate action required; clause aligns with UAE mainland employment law requirements.",
+      "retrieved_context_ids": [
+        "2",
+        "1",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "uae_law_for_mainland_private_sector",
+        "free_zone_scope_check"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:governing_law_jurisdiction",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Governing law and jurisdiction'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: ADGM, DIFC, dispute forum, employer location, free zone, governing law, jurisdiction, workplace."
+    },
+    {
+      "answer_correctness": 0.6633075244,
+      "answer_relevancy": 0.6092883158,
+      "context_precision": 0.8333333333,
+      "context_recall": 0.3333333333,
+      "criteria_id": "visa_sponsorship_employment_eligibility",
+      "criteria_title": "Visa, sponsorship, and employment eligibility",
+      "expected_outcome": "not_primary_fixture_focus",
+      "faithfulness": 0.3846153846,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer states the final employment contract, work permit approval, and onboarding checks remain required. It does not include any visa-cost repayment, recruitment-fee clawback, passport retention, or employee-side sponsorship cost language. The answer should treat work authorization as acceptable, while optionally noting that sponsorship cost responsibility is not spelled out.",
+      "response": "Score: 78\nSummary: Work permit approval is required, but no evidence on visa cost responsibilities.\nObservations: The offer states that the final employment contract and work permit approval are required before employment begins.\nRisks: No clause addressing who bears recruitment, sponsorship, or visa costs, creating a potential cost\u2011recovery risk for the employee.\nRecommendations: Request clarification that the employer will sponsor and cover all visa and recruitment costs and that no repayment or salary deductions will be imposed.",
+      "retrieved_context_ids": [
+        "2",
+        "1",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "work_authorization_required",
+        "employer_cost_recovery_risk"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:visa_sponsorship_employment_eligibility",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Visa, sponsorship, and employment eligibility'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: deduction, recruitment fee, relocation clawback, repayment, start date condition, visa cost, visa sponsorship, work permit."
+    },
+    {
+      "answer_correctness": 0.6997228052,
+      "answer_relevancy": 0.5223120675,
+      "context_precision": 0.3333333333,
+      "context_recall": 0.5,
+      "criteria_id": "missing_unclear_mandatory_terms",
+      "criteria_title": "Missing or unclear mandatory terms",
+      "expected_outcome": "not_primary_fixture_focus",
+      "faithfulness": 0.75,
+      "offer_filename": "01_mainland_software_engineer_compliant.pdf",
+      "reference": "The offer clearly states the employer, job title, work location, start date, full-time limited-term UAE mainland contract type, salary components, probation period, working hours, leave and benefits, and notice period. The answer should treat mandatory core terms as acceptable, with optional note that referenced company policy details may be requested.",
+      "response": "Score: 80\nSummary: All core offer terms are present except an explicit contract term length.\nObservations: Employer identified as Desert Falcon Technologies LLC (chunk 0).; Job title specified as Software Engineer (chunk 0).; Work location given as Business Bay, Dubai, UAE (chunk 0).; Start date set for 1 September 2026 (chunk 0).; Salary components and gross monthly salary detailed (chunk 0).; Probation period of three months stated (chunk 0).; Notice periods during and after probation described (chunk 1).; Leave entitlements (annual, sick, public holidays, medical insurance) outlined (chunk 1).\nRisks: Contract term length is not specified, creating uncertainty about the duration of the limited\u2011term contract.\nRecommendations: Ask the employer to clarify the exact length of the limited\u2011term contract and any renewal or extension provisions.",
+      "retrieved_context_ids": [
+        "2",
+        "1",
+        "0"
+      ],
+      "retrieved_contexts": [
+        "DE Desert Falcon Human Resources Department You must protect company confidential information during and after employment. This obligation does not prevent lawful disclosures to regulators or competent authorities. Governing Law This offer and the employment relationship are governed by applicable UAE law and the competent UAE labour authorities and courts. Acceptance Please sign and return a copy of this offer letter by the acceptance date stated by HR. The final employment contract, work permit approval and completion of onboarding checks remain required. For the employer Noura Al Mansoori Title Head of People Operations Authorized signature Candidate signature / date This synthetic fixture is intentionally formatted like a normal HR PDF for extraction and retrieval testing. Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 2",
+        "three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours Normal working hours are eight hours per day, Monday to Friday. Approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. Leave and Benefits You are entitled to annual leave, sick leave, public holidays, medical insurance and end-of- service gratuity in accordance with UAE labour law. Annual leave entitlement is 30 calendar days after completing one year of service. Notice and Termination After probation, either party may terminate employment by giving 60 days written notice. The company may place you on garden leave or pay in lieu of notice where permitted. Confidentiality Synthetic PDF fixture for OfferGuard evaluation - not a real offer letter Page 1",
+        "DE Desert Falcon Human Resources Department Office 1804, Bay Square Building 7, Business Bay, Dubai, UAE TRN 100487392100003 | hr@desertfalcon.example Reference DFT/HR/OFFER/2026/091 Date 17 August 2026 Mariam Khalid Al Nahda, Dubai, United Arab Emirates Subject: Offer of Employment - Software Engineer Dear Mariam, We are pleased to offer you employment with Desert Falcon Technologies LLC. This letter summarises the principal commercial terms to be reflected in the UAE employment contract. Position Details Employer Desert Falcon Technologies LLC Position Software Engineer Work location Business Bay, Dubai, United Arab Emirates Expected start date 1 September 2026 Monthly Remuneration Component Amount / Detail Basic salary AED 14,000 per month Housing allowance AED 5,000 per month Transport allowance AED 2,000 per month Other allowance AED 1,000 per month Gross monthly salary AED 22,000 paid through WPS Contract and Probation Your employment will be a full-time limited-term UAE mainland contract. The probation period is three months. Either party may terminate during probation by giving notice in accordance with applicable UAE labour law. Working Hours"
+      ],
+      "rule_ids": [
+        "core_offer_terms_should_be_clear",
+        "policies_incorporated_by_reference"
+      ],
+      "sample_id": "01_mainland_software_engineer_compliant:missing_unclear_mandatory_terms",
+      "user_input": "Review 01_mainland_software_engineer_compliant.pdf for the UAE employment criterion 'Missing or unclear mandatory terms'. Determine whether the offer evidence is acceptable, risky, missing, or unclear. Check: as amended, company rules, employer, handbook, job title, leave, notice, policy, probation, salary, start date, work location."
+    }
+  ],
+  "summary": {
+    "answer_correctness": 0.5640898143809044,
+    "answer_relevancy": 0.5499841993268798,
+    "context_precision": 0.9166666665930555,
+    "context_recall": 0.48717948717948717,
+    "faithfulness": 0.5327206981053135
+  }
+}

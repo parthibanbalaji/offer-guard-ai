@@ -193,3 +193,70 @@ async def test_search_document_chunk_ordinals_embeds_query_and_filters_by_docume
     assert client.collections.collection.query.calls[0]["near_vector"] == [0.4, 0.5, 0.6]
     assert client.collections.collection.query.calls[0]["limit"] == 2
     assert client.collections.collection.query.calls[0]["return_properties"] == ["chunk_ordinal"]
+
+
+@pytest.mark.asyncio
+async def test_index_document_chunks_can_use_eval_collection() -> None:
+    class Embeddings:
+        async def embed_texts(self, texts: Sequence[str]) -> list[list[float]]:
+            assert texts == ["Eval chunk"]
+            return [[0.7, 0.8, 0.9]]
+
+    class Batch:
+        def dynamic(self) -> "Batch":
+            return self
+
+        def __enter__(self) -> "Batch":
+            return self
+
+        def __exit__(self, *_: object) -> None:
+            return None
+
+        def add_object(self, **_: Any) -> None:
+            return None
+
+    class Collection:
+        def __init__(self) -> None:
+            self.batch = Batch()
+
+    class Collections:
+        def __init__(self) -> None:
+            self.names: list[str] = []
+
+        def exists(self, name: str) -> bool:
+            self.names.append(name)
+            return True
+
+        def get(self, name: str) -> Collection:
+            self.names.append(name)
+            return Collection()
+
+    class Client:
+        def __init__(self) -> None:
+            self.collections = Collections()
+
+    chunk = DocumentChunk(
+        document_id=UUID("11111111-1111-1111-1111-111111111111"),
+        chunk_ordinal=0,
+        text="Eval chunk",
+        checksum_sha256="d" * 64,
+        language="en",
+        extraction_quality="good",
+        page_number=1,
+        section_heading=None,
+        is_suspicious=False,
+        guardrail_flags=(),
+    )
+    client = Client()
+
+    await weaviate_service.index_document_chunks(
+        client,
+        (chunk,),
+        Embeddings(),
+        collection_name=weaviate_service.EVAL_CHUNK_COLLECTION,
+    )
+
+    assert client.collections.names == [
+        weaviate_service.EVAL_CHUNK_COLLECTION,
+        weaviate_service.EVAL_CHUNK_COLLECTION,
+    ]

@@ -1,0 +1,14 @@
+{
+  "answer_mode": "generate",
+  "criteria_count": 13,
+  "dataset_rows": 13,
+  "eval_collection": "OfferGuardEvalTestChunk",
+  "generated_at": "2026-07-15T15:14:31.972788+00:00",
+  "offer_count": 1,
+  "retrieval_limit": 5,
+  "retriever_mode": "weaviate",
+  "rule_base_id": "uae_private_sector_employment_rules_v1",
+  "selected_files": [
+    "01"
+  ]
+}
