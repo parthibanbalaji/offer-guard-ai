@@ -46,9 +46,11 @@ class WeaviateClauseChunkRetriever:
         document_id: UUID,
         weaviate_client: object | None,
         settings: Settings,
+        collection_name: str | None = None,
     ) -> None:
         self.document_id = document_id
         self.weaviate_client = weaviate_client
+        self.collection_name = collection_name
         self.embedding_model = create_cached_embedding_model(
             settings,
             namespace="report-retrieval",
@@ -101,6 +103,7 @@ class WeaviateClauseChunkRetriever:
                 query_text=query_text,
                 embedding_model=self.embedding_model,
                 limit=limit,
+                **({"collection_name": self.collection_name} if self.collection_name else {}),
             )
             for match in matches:
                 current = best_matches.get(match.chunk_ordinal)

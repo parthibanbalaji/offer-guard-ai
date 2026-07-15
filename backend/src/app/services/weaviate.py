@@ -14,6 +14,7 @@ from app.rag.chunking import DocumentChunk
 from app.rag.embeddings import EmbeddingModel
 
 CHUNK_COLLECTION = "OfferDocumentChunk"
+EVAL_CHUNK_COLLECTION = "OfferGuardEvalTestChunk"
 
 
 class WeaviateNotReadyError(RuntimeError):
@@ -63,10 +64,15 @@ async def close_weaviate_client(client: Any | None) -> None:
 
 async def ensure_chunk_collection(client: Any | None) -> None:
     """Create the document chunk collection if Weaviate does not have it yet."""
+    await ensure_named_chunk_collection(client, collection_name=CHUNK_COLLECTION)
+
+
+async def ensure_named_chunk_collection(client: Any | None, *, collection_name: str) -> None:
+    """Create a chunk-shaped collection if Weaviate does not have it yet."""
     if client is None:
         return
 
-    await asyncio.to_thread(_ensure_chunk_collection, client)
+    await asyncio.to_thread(_ensure_chunk_collection, client, collection_name)
 
 
 @traceable(
@@ -79,14 +85,16 @@ async def index_document_chunks(
     client: Any | None,
     chunks: Sequence[DocumentChunk],
     embedding_model: EmbeddingModel,
+    *,
+    collection_name: str = CHUNK_COLLECTION,
 ) -> int:
     """Embed and store chunks with metadata in Weaviate."""
     if client is None or not chunks:
         return 0
 
     vectors = await embedding_model.embed_texts([chunk.text for chunk in chunks])
-    await ensure_chunk_collection(client)
-    await asyncio.to_thread(_index_document_chunks, client, chunks, vectors)
+    await ensure_named_chunk_collection(client, collection_name=collection_name)
+    await asyncio.to_thread(_index_document_chunks, client, chunks, vectors, collection_name)
     return len(chunks)
 
 
@@ -97,6 +105,7 @@ async def search_document_chunk_ordinals(
     query_text: str,
     embedding_model: EmbeddingModel,
     limit: int,
+    collection_name: str = CHUNK_COLLECTION,
 ) -> tuple[RetrievedChunkMatch, ...]:
     """Return semantically relevant chunk ordinals for one prepared document."""
     if client is None or limit <= 0:
@@ -106,25 +115,45 @@ async def search_document_chunk_ordinals(
     if not vectors:
         return ()
 
-    await ensure_chunk_collection(client)
+    await ensure_named_chunk_collection(client, collection_name=collection_name)
     return await asyncio.to_thread(
         _search_document_chunk_ordinals,
         client,
         document_id,
         vectors[0],
         limit,
+        collection_name,
     )
 
 
-def _ensure_chunk_collection(client: Any) -> None:
+async def list_indexed_document_chunks(
+    client: Any | None,
+    *,
+    document_id: UUID,
+    collection_name: str = CHUNK_COLLECTION,
+) -> tuple[dict[str, Any], ...]:
+    """Return indexed chunk properties for a document from a Weaviate collection."""
+    if client is None:
+        return ()
+
+    await ensure_named_chunk_collection(client, collection_name=collection_name)
+    return await asyncio.to_thread(
+        _list_indexed_document_chunks,
+        client,
+        document_id,
+        collection_name,
+    )
+
+
+def _ensure_chunk_collection(client: Any, collection_name: str) -> None:
     """Synchronous Weaviate collection creation helper."""
-    if client.collections.exists(CHUNK_COLLECTION):
+    if client.collections.exists(collection_name):
         return
 
     from weaviate.classes.config import Configure, DataType, Property
 
     client.collections.create(
-        name=CHUNK_COLLECTION,
+        name=collection_name,
         vectorizer_config=Configure.Vectorizer.none(),
         properties=[
             Property(name="document_id", data_type=DataType.TEXT),
@@ -146,11 +175,12 @@ def _search_document_chunk_ordinals(
     document_id: UUID,
     vector: Sequence[float],
     limit: int,
+    collection_name: str,
 ) -> tuple[RetrievedChunkMatch, ...]:
     """Synchronous Weaviate semantic search helper."""
     from weaviate.classes.query import Filter, MetadataQuery
 
-    collection = client.collections.get(CHUNK_COLLECTION)
+    collection = client.collections.get(collection_name)
     response = collection.query.near_vector(
         near_vector=list(vector),
         filters=Filter.by_property("document_id").equal(str(document_id)),
@@ -179,9 +209,10 @@ def _index_document_chunks(
     client: Any,
     chunks: Sequence[DocumentChunk],
     vectors: Sequence[Sequence[float]],
+    collection_name: str,
 ) -> None:
     """Synchronous Weaviate batch indexing helper."""
-    collection = client.collections.get(CHUNK_COLLECTION)
+    collection = client.collections.get(collection_name)
     with collection.batch.dynamic() as batch:
         for chunk, vector in zip(chunks, vectors, strict=True):
             batch.add_object(
@@ -200,6 +231,39 @@ def _index_document_chunks(
                 },
                 vector=list(vector),
             )
+
+
+def _list_indexed_document_chunks(
+    client: Any,
+    document_id: UUID,
+    collection_name: str,
+) -> tuple[dict[str, Any], ...]:
+    """Synchronous Weaviate document chunk listing helper."""
+    from weaviate.classes.query import Filter
+
+    collection = client.collections.get(collection_name)
+    response = collection.query.fetch_objects(
+        filters=Filter.by_property("document_id").equal(str(document_id)),
+        limit=10_000,
+        return_properties=[
+            "document_id",
+            "chunk_ordinal",
+            "text",
+            "checksum_sha256",
+            "language",
+            "extraction_quality",
+            "page_number",
+            "section_heading",
+            "is_suspicious",
+            "guardrail_flags",
+        ],
+    )
+    return tuple(
+        sorted(
+            (dict(item.properties) for item in response.objects),
+            key=lambda properties: int(properties.get("chunk_ordinal", 0)),
+        )
+    )
 
 
 def chunk_object_id(chunk: DocumentChunk) -> str:

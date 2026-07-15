@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "sample_offers_v1_ground_truth",
+  "description": "Fixture-specific ground truth for RAGAS scoring. References should describe the expected answer for the actual synthetic offer, not every possible rule-base evidence field.",
+  "cases": {
+    "01_mainland_software_engineer_compliant.pdf": {
+      "probation_period": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "probation period is three months",
+          "termination during probation requires notice in accordance with UAE labour law"
+        ],
+        "reference": "The offer states a three-month probation period, which is within the UAE six-month maximum. It also says either party may terminate during probation by giving notice in accordance with applicable UAE labour law. The answer should treat the clause as acceptable while noting that the exact probation notice period is not spelled out."
+      },
+      "notice_period": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "60 days written notice after probation",
+          "either party may terminate",
+          "garden leave or pay in lieu where permitted"
+        ],
+        "reference": "The offer states that after probation either party may terminate employment by giving 60 days written notice. A 60-day written notice period is within the ordinary UAE 30-to-90-day range. The company may place the employee on garden leave or pay in lieu of notice where permitted. The answer should treat this as acceptable and may mention that notice-compensation mechanics could be clearer."
+      },
+      "salary_and_compensation": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "basic salary AED 14000 per month",
+          "housing allowance AED 5000 per month",
+          "transport allowance AED 2000 per month",
+          "other allowance AED 1000 per month",
+          "gross monthly salary AED 22000 paid through WPS"
+        ],
+        "reference": "The offer clearly separates basic salary from allowances: AED 14,000 basic salary, AED 5,000 housing allowance, AED 2,000 transport allowance, AED 1,000 other allowance, and AED 22,000 gross monthly salary paid through WPS. The answer should treat salary clarity as acceptable. It may note that no deduction or clawback clause is provided, which is not a problem in this compliant fixture."
+      },
+      "working_hours": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "normal working hours are eight hours per day",
+          "Monday to Friday schedule",
+          "approved overtime and Ramadan adjustments follow UAE labour law"
+        ],
+        "reference": "The offer states normal working hours are eight hours per day, Monday to Friday. It also says approved overtime and Ramadan working-hour adjustments will be handled in accordance with UAE labour law and company policy. The answer should treat the working-hours clause as acceptable, with optional clarification that the weekly total is implied rather than separately stated."
+      },
+      "annual_leave": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "annual leave entitlement is 30 calendar days after one year",
+          "annual leave is provided in accordance with UAE labour law"
+        ],
+        "reference": "The offer states the employee is entitled to annual leave in accordance with UAE labour law and specifically gives 30 calendar days after completing one year of service. The answer should treat the annual leave entitlement as acceptable. It may mention that first-year accrual and unused-leave handling are not detailed in the offer."
+      },
+      "sick_leave": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "sick leave is provided in accordance with UAE labour law"
+        ],
+        "reference": "The offer mentions sick leave as a benefit provided in accordance with UAE labour law, but it does not spell out the statutory sick-pay schedule. For this compliant fixture, the answer should treat sick leave as generally acceptable by incorporation of UAE law while noting that the detailed day-count and pay schedule are not written in the offer."
+      },
+      "termination": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "after probation either party may terminate with 60 days written notice",
+          "garden leave or pay in lieu where permitted",
+          "probation termination notice follows UAE labour law"
+        ],
+        "reference": "The offer gives ordinary post-probation termination rights to either party with 60 days written notice and permits garden leave or pay in lieu where permitted. Probation termination also requires notice in accordance with UAE labour law. The answer should treat termination as acceptable, while optionally noting that summary-dismissal grounds and final-settlement mechanics are not detailed."
+      },
+      "end_of_service_gratuity": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "end-of-service gratuity is provided in accordance with UAE labour law",
+          "basic salary amount is stated"
+        ],
+        "reference": "The offer states the employee is entitled to end-of-service gratuity in accordance with UAE labour law and states the basic salary amount. It does not write out the gratuity formula. For this compliant fixture, the answer should treat gratuity as acceptable by incorporation of UAE law while noting that the calculation formula is not detailed."
+      },
+      "non_compete_restrictive_covenants": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "no non-compete or restrictive covenant appears in the offer"
+        ],
+        "reference": "The offer does not contain a non-compete, non-solicit, or other post-termination restrictive covenant. The answer should not treat the absence of a non-compete as an employee risk in this compliant fixture. It should say no restrictive covenant issue was identified."
+      },
+      "confidentiality": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "protect company confidential information during and after employment",
+          "lawful disclosures to regulators or competent authorities are allowed"
+        ],
+        "reference": "The offer requires the employee to protect company confidential information during and after employment, and it expressly preserves lawful disclosures to regulators or competent authorities. The answer should treat confidentiality as acceptable, with optional note that the clause does not separately define confidential information."
+      },
+      "governing_law_jurisdiction": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "employment relationship governed by applicable UAE law",
+          "competent UAE labour authorities and courts",
+          "UAE mainland contract",
+          "Business Bay Dubai work location"
+        ],
+        "reference": "The offer states the employment relationship is governed by applicable UAE law and the competent UAE labour authorities and courts. It identifies a UAE mainland contract and a Business Bay, Dubai work location. The answer should treat governing law and jurisdiction as acceptable."
+      },
+      "visa_sponsorship_employment_eligibility": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "work permit approval remains required before final employment",
+          "no visa repayment or recruitment-fee clawback appears"
+        ],
+        "reference": "The offer states the final employment contract, work permit approval, and onboarding checks remain required. It does not include any visa-cost repayment, recruitment-fee clawback, passport retention, or employee-side sponsorship cost language. The answer should treat work authorization as acceptable, while optionally noting that sponsorship cost responsibility is not spelled out."
+      },
+      "missing_unclear_mandatory_terms": {
+        "expected_outcome": "acceptable",
+        "required_offer_evidence": [
+          "employer",
+          "job title",
+          "work location",
+          "start date",
+          "contract type",
+          "salary components",
+          "probation",
+          "working hours",
+          "leave and benefits",
+          "notice"
+        ],
+        "reference": "The offer clearly states the employer, job title, work location, start date, full-time limited-term UAE mainland contract type, salary components, probation period, working hours, leave and benefits, and notice period. The answer should treat mandatory core terms as acceptable, with optional note that referenced company policy details may be requested."
+      }
+    }
+  }
+}

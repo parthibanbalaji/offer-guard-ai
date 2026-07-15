@@ -58,7 +58,7 @@ known-first-party = ["app"]
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["src", "."]
 
 [tool.coverage.run]
 branch = true
