@@ -125,9 +125,7 @@ def load_ground_truth_manifest(path: Path | None) -> dict[str, dict[str, dict[st
 def settings_for_eval() -> Settings:
     """Load settings from the nearest project env file for CLI eval runs."""
     root_env = Path(__file__).resolve().parents[2] / ".env"
-    defaults = {
-        "database_url": "postgresql+asyncpg://eval:eval@localhost:5432/offerguard_eval"
-    }
+    defaults = {"database_url": "postgresql+asyncpg://eval:eval@localhost:5432/offerguard_eval"}
     if root_env.exists():
         return Settings(_env_file=root_env, **defaults)
     return Settings(_env_file=None, **defaults)
@@ -160,9 +158,9 @@ def filter_offer_cases(
     return filtered
 
 
-def extract_offer_chunks(path: Path, *, chunk_target_chars: int, chunk_overlap_chars: int) -> tuple[
-    StoredDocumentChunk, ...
-]:
+def extract_offer_chunks(
+    path: Path, *, chunk_target_chars: int, chunk_overlap_chars: int
+) -> tuple[StoredDocumentChunk, ...]:
     """Extract and chunk a fixture PDF into stored-chunk shaped values."""
     document_id = uuid5(NAMESPACE_URL, path.as_uri())
     extracted = extract_document(
@@ -231,9 +229,7 @@ async def build_ragas_rows(
             retriever_mode=retriever_mode,
             eval_collection=eval_collection,
             document_id=(
-                chunks[0].document_id
-                if chunks
-                else uuid5(NAMESPACE_URL, offer_case.path.as_uri())
+                chunks[0].document_id if chunks else uuid5(NAMESPACE_URL, offer_case.path.as_uri())
             ),
         )
         for clause in rule_base.clauses:
@@ -520,8 +516,7 @@ def analysis_to_text(analysis: dict[str, Any]) -> str:
         f"Summary: {analysis.get('summary')}",
         "Observations: " + "; ".join(str(item) for item in analysis.get("observations", [])),
         "Risks: " + "; ".join(str(item) for item in analysis.get("risks", [])),
-        "Recommendations: "
-        + "; ".join(str(item) for item in analysis.get("recommendations", [])),
+        "Recommendations: " + "; ".join(str(item) for item in analysis.get("recommendations", [])),
     ]
     return "\n".join(section for section in sections if section.strip())
 
@@ -551,9 +546,7 @@ def write_json(path: Path, payload: Any) -> None:
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     """Read JSONL rows."""
     return [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
+        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
     ]
 
 

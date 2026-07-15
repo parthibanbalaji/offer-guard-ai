@@ -53,6 +53,32 @@ async def test_check_weaviate_raises_when_client_is_not_ready() -> None:
 
 
 @pytest.mark.asyncio
+async def test_weaviate_helpers_noop_without_client() -> None:
+    class Embeddings:
+        async def embed_texts(self, texts: Sequence[str]) -> list[list[float]]:
+            raise AssertionError(f"unexpected embedding call: {texts}")
+
+    assert await weaviate_service.index_document_chunks(None, (), Embeddings()) == 0
+    assert (
+        await weaviate_service.search_document_chunk_ordinals(
+            None,
+            document_id=UUID("11111111-1111-1111-1111-111111111111"),
+            query_text="probation",
+            embedding_model=Embeddings(),
+            limit=5,
+        )
+        == ()
+    )
+    assert (
+        await weaviate_service.list_indexed_document_chunks(
+            None,
+            document_id=UUID("11111111-1111-1111-1111-111111111111"),
+        )
+        == ()
+    )
+
+
+@pytest.mark.asyncio
 async def test_index_document_chunks_embeds_and_batches_objects() -> None:
     class Embeddings:
         async def embed_texts(self, texts: Sequence[str]) -> list[list[float]]:
@@ -196,6 +222,62 @@ async def test_search_document_chunk_ordinals_embeds_query_and_filters_by_docume
 
 
 @pytest.mark.asyncio
+async def test_search_document_chunk_ordinals_can_use_eval_collection() -> None:
+    class Embeddings:
+        async def embed_texts(self, texts: Sequence[str]) -> list[list[float]]:
+            assert texts == ["governing law"]
+            return [[0.9, 0.8, 0.7]]
+
+    class Query:
+        def near_vector(self, **_: Any) -> SimpleNamespace:
+            return SimpleNamespace(
+                objects=[
+                    SimpleNamespace(
+                        properties={"chunk_ordinal": 4},
+                        metadata=SimpleNamespace(distance=None),
+                    )
+                ]
+            )
+
+    class Collection:
+        def __init__(self) -> None:
+            self.query = Query()
+
+    class Collections:
+        def __init__(self) -> None:
+            self.names: list[str] = []
+
+        def exists(self, name: str) -> bool:
+            self.names.append(name)
+            return True
+
+        def get(self, name: str) -> Collection:
+            self.names.append(name)
+            return Collection()
+
+    class Client:
+        def __init__(self) -> None:
+            self.collections = Collections()
+
+    client = Client()
+
+    matches = await weaviate_service.search_document_chunk_ordinals(
+        client,
+        document_id=UUID("11111111-1111-1111-1111-111111111111"),
+        query_text="governing law",
+        embedding_model=Embeddings(),
+        limit=1,
+        collection_name=weaviate_service.EVAL_CHUNK_COLLECTION,
+    )
+
+    assert matches == (weaviate_service.RetrievedChunkMatch(chunk_ordinal=4, distance=None),)
+    assert client.collections.names == [
+        weaviate_service.EVAL_CHUNK_COLLECTION,
+        weaviate_service.EVAL_CHUNK_COLLECTION,
+    ]
+
+
+@pytest.mark.asyncio
 async def test_index_document_chunks_can_use_eval_collection() -> None:
     class Embeddings:
         async def embed_texts(self, texts: Sequence[str]) -> list[list[float]]:
@@ -260,3 +342,59 @@ async def test_index_document_chunks_can_use_eval_collection() -> None:
         weaviate_service.EVAL_CHUNK_COLLECTION,
         weaviate_service.EVAL_CHUNK_COLLECTION,
     ]
+
+
+@pytest.mark.asyncio
+async def test_list_indexed_document_chunks_returns_sorted_properties() -> None:
+    class Query:
+        def fetch_objects(self, **kwargs: Any) -> SimpleNamespace:
+            self.call = kwargs
+            return SimpleNamespace(
+                objects=[
+                    SimpleNamespace(
+                        properties={
+                            "document_id": "11111111-1111-1111-1111-111111111111",
+                            "chunk_ordinal": 2,
+                            "text": "Second",
+                        }
+                    ),
+                    SimpleNamespace(
+                        properties={
+                            "document_id": "11111111-1111-1111-1111-111111111111",
+                            "chunk_ordinal": 1,
+                            "text": "First",
+                        }
+                    ),
+                ]
+            )
+
+    class Collection:
+        def __init__(self) -> None:
+            self.query = Query()
+
+    class Collections:
+        def __init__(self) -> None:
+            self.collection = Collection()
+
+        def exists(self, name: str) -> bool:
+            assert name == weaviate_service.EVAL_CHUNK_COLLECTION
+            return True
+
+        def get(self, name: str) -> Collection:
+            assert name == weaviate_service.EVAL_CHUNK_COLLECTION
+            return self.collection
+
+    class Client:
+        def __init__(self) -> None:
+            self.collections = Collections()
+
+    client = Client()
+
+    chunks = await weaviate_service.list_indexed_document_chunks(
+        client,
+        document_id=UUID("11111111-1111-1111-1111-111111111111"),
+        collection_name=weaviate_service.EVAL_CHUNK_COLLECTION,
+    )
+
+    assert [chunk["chunk_ordinal"] for chunk in chunks] == [1, 2]
+    assert client.collections.collection.query.call["limit"] == 10_000
